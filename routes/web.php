@@ -1,15 +1,21 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExcelTemplateController;
 use App\Http\Controllers\StoreOrderController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
+
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/store-orders', [StoreOrderController::class, 'index'])->name('store-orders');
 Route::get('/store-orders/create', [StoreOrderController::class, 'create'])->name('store-orders-create');
+
+Route::controller(ExcelTemplateController::class)->name('excel.')->prefix('excel')->group(function () {
+    Route::get('/gsi-bakery-template', 'gsiBakeryTemplate')->name('gsi-bakery-template');
+    Route::get('/gsi-pr-template', 'gsiPrTemplate')->name('gsi-pr-template');
+    Route::get('/pul-template', 'pulTemplate')->name('pul-template');
+});
 
 // Route::get('/dashboard', function () {
 //     return Inertia::render('Dashboard');

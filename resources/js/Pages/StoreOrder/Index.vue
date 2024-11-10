@@ -174,19 +174,25 @@ const statusClass = (status) =>
                         <ul>
                             <li>
                                 GSI BAKERY:
-                                <a class="text-blue-500 underline" href=""
+                                <a
+                                    class="text-blue-500 underline"
+                                    href="/excel/gsi-bakery-template"
                                     >Click to download</a
                                 >
                             </li>
                             <li>
                                 GSI PR:
-                                <a class="text-blue-500 underline" href=""
+                                <a
+                                    class="text-blue-500 underline"
+                                    href="/excel/gsi-pr-template"
                                     >Click to download</a
                                 >
                             </li>
                             <li>
                                 PUL:
-                                <a class="text-blue-500 underline" href=""
+                                <a
+                                    class="text-blue-500 underline"
+                                    href="/excel/pul-template"
                                     >Click to download</a
                                 >
                             </li>
