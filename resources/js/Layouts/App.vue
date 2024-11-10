@@ -73,8 +73,8 @@ const isActive = (route) => {
                             Dashboard
                         </NavLink>
                         <DropdownMenuLabel> Ordering </DropdownMenuLabel>
-                        <NavLink href="/ordering" :icon="Home">
-                            Store Order
+                        <NavLink href="/store-orders" :icon="Home">
+                            Store Orders
                         </NavLink>
                         <DropdownMenuLabel> Receiving </DropdownMenuLabel>
                         <DropdownMenuLabel> Sales </DropdownMenuLabel>

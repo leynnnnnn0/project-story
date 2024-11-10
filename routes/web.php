@@ -1,14 +1,15 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Ordering;
+use App\Http\Controllers\StoreOrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/ordering', [Ordering::class, 'index'])->name('ordering');
+Route::get('/store-orders', [StoreOrderController::class, 'index'])->name('store-orders');
+Route::get('/store-orders/create', [StoreOrderController::class, 'create'])->name('store-orders-create');
 
 // Route::get('/dashboard', function () {
 //     return Inertia::render('Dashboard');

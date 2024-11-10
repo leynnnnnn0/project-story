@@ -6,6 +6,7 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createApp, h } from "vue";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 import PrimeVue from "primevue/config";
+import Layout from "./Layouts/App.vue";
 
 // resolve: (name) => {
 //     const pages = import.meta.glob("./Pages/**/*.vue", { eager: true });
@@ -29,6 +30,7 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
+            .component("Layout", Layout)
             .use(PrimeVue, {
                 theme: {},
             })
