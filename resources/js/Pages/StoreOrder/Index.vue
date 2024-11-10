@@ -42,46 +42,15 @@ import {
 
 const invoices = [
     {
-        invoice: "INV001",
-        paymentStatus: "Paid",
-        totalAmount: "$250.00",
-        paymentMethod: "Credit Card",
-    },
-    {
-        invoice: "INV002",
-        paymentStatus: "Pending",
-        totalAmount: "$150.00",
-        paymentMethod: "PayPal",
-    },
-    {
-        invoice: "INV003",
-        paymentStatus: "Unpaid",
-        totalAmount: "$350.00",
-        paymentMethod: "Bank Transfer",
-    },
-    {
-        invoice: "INV004",
-        paymentStatus: "Paid",
-        totalAmount: "$450.00",
-        paymentMethod: "Credit Card",
-    },
-    {
-        invoice: "INV005",
-        paymentStatus: "Paid",
-        totalAmount: "$550.00",
-        paymentMethod: "PayPal",
-    },
-    {
-        invoice: "INV006",
-        paymentStatus: "Pending",
-        totalAmount: "$200.00",
-        paymentMethod: "Bank Transfer",
-    },
-    {
-        invoice: "INV007",
-        paymentStatus: "Unpaid",
-        totalAmount: "$300.00",
-        paymentMethod: "Credit Card",
+        id: "2",
+        vendor: "Customer Service",
+        store: "Glorietta",
+        created_at: "10/11/24",
+        order_date: "10/11/24",
+        order_number: "INV001",
+        order_total_item: "2",
+        order_total_quantity: "2",
+        receving_status: "Pending",
     },
 ];
 
@@ -111,10 +80,15 @@ const handleClick = () => {
                     <TableCaption>A list of your recent orders.</TableCaption>
                     <TableHeader>
                         <TableRow>
-                            <TableHead class="w-[100px]"> Invoice </TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Method</TableHead>
-                            <TableHead class="text-right"> Amount </TableHead>
+                            <TableHead> Id </TableHead>
+                            <TableHead> Vendor</TableHead>
+                            <TableHead> Store</TableHead>
+                            <TableHead> Order Placed At</TableHead>
+                            <TableHead> Order # </TableHead>
+                            <TableHead> Order Date </TableHead>
+                            <TableHead> Order Items </TableHead>
+                            <TableHead> Order Quantity </TableHead>
+                            <TableHead> Receiving Status </TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -122,14 +96,19 @@ const handleClick = () => {
                             v-for="invoice in invoices"
                             :key="invoice.invoice"
                         >
-                            <TableCell class="font-medium">
-                                {{ invoice.invoice }}
-                            </TableCell>
-                            <TableCell>{{ invoice.paymentStatus }}</TableCell>
-                            <TableCell>{{ invoice.paymentMethod }}</TableCell>
-                            <TableCell class="text-right">
-                                {{ invoice.totalAmount }}
-                            </TableCell>
+                            <TableCell>{{ invoice.id }}</TableCell>
+                            <TableCell>{{ invoice.vendor }}</TableCell>
+                            <TableCell>{{ invoice.store }}</TableCell>
+                            <TableCell>{{ invoice.created_at }}</TableCell>
+                            <TableCell>{{ invoice.order_date }}</TableCell>
+                            <TableCell>{{ invoice.order_number }}</TableCell>
+                            <TableCell>{{
+                                invoice.order_total_item
+                            }}</TableCell>
+                            <TableCell>{{
+                                invoice.order_total_quantity
+                            }}</TableCell>
+                            <TableCell>{{ invoice.receving_status }}</TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
