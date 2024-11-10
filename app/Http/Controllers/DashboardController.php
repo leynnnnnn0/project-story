@@ -11,7 +11,6 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        dd(DB::table('vendormasterfile')->get());
         return Inertia::render('Dashboard/Index');
     }
 }

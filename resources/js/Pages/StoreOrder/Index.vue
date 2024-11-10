@@ -30,7 +30,6 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-
 import {
     Table,
     TableBody,
@@ -41,21 +40,19 @@ import {
     TableRow,
 } from "@/components/ui/table";
 
-const invoices = [
-    {
-        id: "2",
-        vendor: "Customer Service",
-        store: "Glorietta",
-        created_at: "10/11/24",
-        order_date: "10/11/24",
-        order_number: "INV001",
-        order_total_item: "2",
-        order_total_quantity: "2",
-        receving_status: "Pending",
-    },
-];
+import { useForm } from "@inertiajs/vue3";
 
-import { ref, computed } from "vue";
+const form = useForm({
+    store: null,
+    store_order_date: new Date().toISOString().slice(0, 10),
+    orders_list: null,
+});
+
+const proceed = () => {
+    console.log(form);
+};
+
+import { ref } from "vue";
 
 const visible = ref(false);
 const handleClick = () => {
@@ -64,6 +61,12 @@ const handleClick = () => {
 
 const props = defineProps({
     orders: {
+        type: Object,
+    },
+    branches: {
+        type: Object,
+    },
+    vendors: {
         type: Object,
     },
 });
@@ -137,27 +140,19 @@ const statusClass = (status) =>
                 <div class="space-y-5">
                     <div class="space-y-1">
                         <Label>Store</Label>
-                        <Select>
+                        <Select v-model="form.store">
                             <SelectTrigger>
                                 <SelectValue placeholder="Select Store" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
                                     <SelectLabel>Select Store</SelectLabel>
-                                    <SelectItem value="apple">
-                                        Apple
-                                    </SelectItem>
-                                    <SelectItem value="banana">
-                                        Banana
-                                    </SelectItem>
-                                    <SelectItem value="blueberry">
-                                        Blueberry
-                                    </SelectItem>
-                                    <SelectItem value="grapes">
-                                        Grapes
-                                    </SelectItem>
-                                    <SelectItem value="pineapple">
-                                        Pineapple
+                                    <SelectItem
+                                        v-for="(value, key) in branches"
+                                        :key="key"
+                                        :value="key"
+                                    >
+                                        {{ value }}
                                     </SelectItem>
                                 </SelectGroup>
                             </SelectContent>
@@ -165,11 +160,14 @@ const statusClass = (status) =>
                     </div>
                     <div class="flex flex-col space-y-1">
                         <Label>SO Date</Label>
-                        <Input type="date" />
+                        <Input type="date" v-model="form.store_order_date" />
                     </div>
                     <div class="flex flex-col space-y-1">
                         <Label>Orders</Label>
-                        <Input type="file" />
+                        <Input
+                            type="file"
+                            @input="form.orders_list = $event.target.files[0]"
+                        />
                     </div>
                     <div class="flex flex-col space-y-1">
                         <Label>Orders Templates</Label>
@@ -196,7 +194,7 @@ const statusClass = (status) =>
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button type="submit"> Proceed </Button>
+                    <Button @click="proceed" type="submit"> Proceed </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
