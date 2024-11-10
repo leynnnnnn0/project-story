@@ -9,6 +9,7 @@ class Order extends Model
     protected $table = 'transactionheader';
 
     protected $attributes = [
+        'id',
         'TransactionType' => 'transaction_type',
         'OrderDate' => 'order_date',
         'ReceivingDate' => 'receiving_date',
@@ -46,14 +47,13 @@ class Order extends Model
     ];
 
     protected $casts = [
-        'OrderDate' => 'datetime',
-        'ReceivingDate' => 'date',
-        'CreatedDate' => 'datetime',
-        'LastUpdateDate' => 'datetime',
-        'SODate' => 'date',
-        'SOApprovedDate' => 'datetime',
-        'ApprovedDate' => 'datetime',
-        'updated_at' => 'datetime',
-        'created_at' => 'datetime',
+        'OrderDate' => 'datetime:F d, Y',
+        'ReceivingDate' => 'date:F d, Y',
+        'CreatedDate' => 'datetime:F d, Y',
+        'LastUpdateDate' => 'datetime:F d, Y',
+        'SODate' => 'date:F d, Y',
+        'SOApprovedDate' => 'datetime:F d, Y',
+        'ApprovedDate' => 'datetime:F d, Y',
+        'created_at' => 'datetime:F d, Y'
     ];
 }

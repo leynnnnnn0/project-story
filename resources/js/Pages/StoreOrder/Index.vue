@@ -29,6 +29,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 
 import {
     Table,
@@ -54,12 +55,23 @@ const invoices = [
     },
 ];
 
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 const visible = ref(false);
 const handleClick = () => {
     visible.value = true;
 };
+
+const props = defineProps({
+    orders: {
+        type: Object,
+    },
+});
+
+const statusClass = (status) =>
+    status === "RECEIVED"
+        ? "bg-green-500 text-white"
+        : "bg-yellow-500 text-white";
 </script>
 
 <template>
@@ -92,23 +104,22 @@ const handleClick = () => {
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        <TableRow
-                            v-for="invoice in invoices"
-                            :key="invoice.invoice"
-                        >
-                            <TableCell>{{ invoice.id }}</TableCell>
-                            <TableCell>{{ invoice.vendor }}</TableCell>
-                            <TableCell>{{ invoice.store }}</TableCell>
-                            <TableCell>{{ invoice.created_at }}</TableCell>
-                            <TableCell>{{ invoice.order_date }}</TableCell>
-                            <TableCell>{{ invoice.order_number }}</TableCell>
+                        <TableRow v-for="order in orders" :key="order.id">
+                            <TableCell>{{ order.Id }}</TableCell>
+                            <TableCell>{{ order.Supplier }}</TableCell>
+                            <TableCell>{{ order.BranchID }}</TableCell>
+                            <TableCell>{{ order.created_at }}</TableCell>
+                            <TableCell>{{ order.SONumber }}</TableCell>
+                            <TableCell>{{ order.OrderDate }}</TableCell>
+                            <TableCell>{{ order.Total_Item }}</TableCell>
                             <TableCell>{{
-                                invoice.order_total_item
+                                order.TOTALQUANTITY ?? 0
                             }}</TableCell>
-                            <TableCell>{{
-                                invoice.order_total_quantity
-                            }}</TableCell>
-                            <TableCell>{{ invoice.receving_status }}</TableCell>
+                            <TableCell>
+                                <Badge :class="statusClass(order.Status)">{{
+                                    order.Status
+                                }}</Badge>
+                            </TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
