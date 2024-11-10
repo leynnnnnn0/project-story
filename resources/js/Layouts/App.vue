@@ -26,6 +26,15 @@ defineProps({
         type: Function,
         required: false,
     },
+    hasButton: {
+        type: Boolean,
+        default: false,
+        required: false,
+    },
+    buttonName: {
+        type: String,
+        required: false,
+    },
 });
 
 import { usePage } from "@inertiajs/vue3";
@@ -60,17 +69,11 @@ const isActive = (route) => {
                     <nav
                         class="grid items-start px-2 text-sm font-medium lg:px-4"
                     >
-                        <NavLink
-                            href="/dashboard"
-                            :icon="Home"
-                        >
+                        <NavLink href="/dashboard" :icon="Home">
                             Dashboard
                         </NavLink>
                         <DropdownMenuLabel> Ordering </DropdownMenuLabel>
-                        <NavLink
-                            href="/ordering"
-                            :icon="Home"
-                        >
+                        <NavLink href="/ordering" :icon="Home">
                             Store Order
                         </NavLink>
                         <DropdownMenuLabel> Receiving </DropdownMenuLabel>
@@ -165,7 +168,9 @@ const isActive = (route) => {
                     <h1 class="text-lg font-semibold md:text-2xl">
                         {{ heading }}
                     </h1>
-                    <!-- <Button @click="handleClick">Create New Order</Button> -->
+                    <Button v-show="hasButton" @click="handleClick">{{
+                        buttonName
+                    }}</Button>
                 </div>
                 <div class="space-y-10">
                     <slot />
