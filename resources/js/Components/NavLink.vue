@@ -5,7 +5,7 @@ import { usePage } from "@inertiajs/vue3";
 const isActive = (route) => {
     return usePage().url.includes(route);
 };
-
+ 
 defineProps({
     href: {
         type: String,

@@ -61,4 +61,9 @@ class Order extends Model
     {
         return $this->belongsTo(Branch::class, 'BranchID');
     }
+
+    public function vendor()
+    {
+        return $this->belongsTo(Vendor::class, 'Supplier');
+    }
 }
