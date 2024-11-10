@@ -8,15 +8,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-defineProps({
-    heading: String,
-    handleClick: {
-        type: Function,
-        required: false,
-    },
-});
-
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
     Bell,
@@ -26,9 +17,18 @@ import {
     Package,
     Package2,
 } from "lucide-vue-next";
-import { usePage } from "@inertiajs/vue3";
-import { Link } from "@inertiajs/vue3";
 
+import NavLink from "../Components/NavLink.vue";
+
+defineProps({
+    heading: String,
+    handleClick: {
+        type: Function,
+        required: false,
+    },
+});
+
+import { usePage } from "@inertiajs/vue3";
 const isActive = (route) => {
     return usePage().url.includes(route);
 };
@@ -60,32 +60,21 @@ const isActive = (route) => {
                     <nav
                         class="grid items-start px-2 text-sm font-medium lg:px-4"
                     >
-                        <Link
-                            href="/dashboard"
-                            class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-                            :class="{ 'text-primary': isActive('/dashboard') }"
-                        >
-                            <Home class="h-4 w-4" />
-                            Dashboard
-                        </Link>
-                        <DropdownMenuLabel> Ordering </DropdownMenuLabel>
-                        <Link
-                            href="/create-store-order"
-                            class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
-                            :class="{
-                                'text-primary': isActive('/create-store-order'),
-                            }"
-                        >
-                            <Package class="h-4 w-4" />
-                            Create Store Order
-                        </Link>
-                        <a
+                        <NavLink
                             href="/"
-                            class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+                            :isActive="isActive('/')"
+                            :icon="Home"
                         >
-                            <Package class="h-4 w-4" />
-                            Store Order (W/O SO)
-                        </a>
+                            Dashboard
+                        </NavLink>
+                        <DropdownMenuLabel> Ordering </DropdownMenuLabel>
+                        <NavLink
+                            href="/store-order"
+                            :isActive="isActive('/store-order')"
+                            :icon="Home"
+                        >
+                            Store Order
+                        </NavLink>
                         <DropdownMenuLabel> Receiving </DropdownMenuLabel>
                         <DropdownMenuLabel> Sales </DropdownMenuLabel>
                         <DropdownMenuLabel> Inventory </DropdownMenuLabel>
@@ -94,7 +83,7 @@ const isActive = (route) => {
                         <DropdownMenuLabel> User </DropdownMenuLabel>
                     </nav>
                 </div>
-                <div class="mt-auto p-4">test 1</div>
+                <div class="mt-auto p-4">Test</div>
             </div>
         </div>
         <div class="flex flex-col">
@@ -178,7 +167,7 @@ const isActive = (route) => {
                     <h1 class="text-lg font-semibold md:text-2xl">
                         {{ heading }}
                     </h1>
-                    <Button @click="handleClick">Create New Order</Button>
+                    <!-- <Button @click="handleClick">Create New Order</Button> -->
                 </div>
                 <div class="space-y-10">
                     <slot />
