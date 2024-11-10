@@ -56,4 +56,9 @@ class Order extends Model
         'ApprovedDate' => 'datetime:F d, Y',
         'created_at' => 'datetime:F d, Y'
     ];
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'BranchID');
+    }
 }

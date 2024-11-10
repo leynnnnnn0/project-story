@@ -10,8 +10,7 @@ class StoreOrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::all();
-        dd($orders);
+        $orders = Order::with(['branch'])->get();
         return Inertia::render(
             'StoreOrder/Index',
             ['orders' => $orders]
