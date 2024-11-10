@@ -61,16 +61,14 @@ const isActive = (route) => {
                         class="grid items-start px-2 text-sm font-medium lg:px-4"
                     >
                         <NavLink
-                            href="/"
-                            :isActive="isActive('/')"
+                            href="/dashboard"
                             :icon="Home"
                         >
                             Dashboard
                         </NavLink>
                         <DropdownMenuLabel> Ordering </DropdownMenuLabel>
                         <NavLink
-                            href="/store-order"
-                            :isActive="isActive('/store-order')"
+                            href="/ordering"
                             :icon="Home"
                         >
                             Store Order
