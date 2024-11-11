@@ -34,13 +34,34 @@ const props = defineProps({
         type: Object,
         required: false,
     },
-    branches: {
+    products: {
         type: Object,
+        required: true,
+    },
+    orderDate: {
+        type: String,
         required: true,
     },
 });
 
-console.log(props.branches);
+import { ref, watch } from "vue";
+
+const productId = ref(null);
+const itemDetails = ref(null);
+const orderDate = ref(props.orderDate);
+const unitOfMeasurment = ref(null);
+watch(productId, (newValue) => {
+    if (newValue) {
+        axios
+            .get(route("product.show", newValue))
+            .then((response) => response.data)
+            .then((result) => {
+                itemDetails.value = result;
+                unitOfMeasurment.value = result.Packaging;
+            })
+            .catch((err) => console.log(err));
+    }
+});
 </script>
 
 <template>
@@ -54,11 +75,11 @@ console.log(props.branches);
                 <CardContent class="space-y-3">
                     <div class="flex flex-col space-y-1">
                         <Label>SO Date</Label>
-                        <Input type="date" />
+                        <Input type="date" v-model="orderDate" />
                     </div>
                     <div class="space-y-1">
                         <Label>Item</Label>
-                        <Select>
+                        <Select v-model="productId">
                             <SelectTrigger>
                                 <SelectValue placeholder="Select Store" />
                             </SelectTrigger>
@@ -66,7 +87,7 @@ console.log(props.branches);
                                 <SelectGroup>
                                     <SelectLabel>Select Store</SelectLabel>
                                     <SelectItem
-                                        v-for="(value, key) in branches"
+                                        v-for="(value, key) in products"
                                         :key="key"
                                         :value="key"
                                     >
@@ -78,7 +99,11 @@ console.log(props.branches);
                     </div>
                     <div class="flex flex-col space-y-1">
                         <Label>Unit Of Measurement (UOM)</Label>
-                        <Input type="text" disabled />
+                        <Input
+                            type="text"
+                            disabled
+                            v-model="unitOfMeasurment"
+                        />
                     </div>
                     <div class="flex flex-col space-y-1">
                         <Label>Quantity</Label>
