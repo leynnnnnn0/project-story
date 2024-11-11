@@ -29,50 +29,18 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
-const invoices = [
-    {
-        invoice: "INV001",
-        paymentStatus: "Paid",
-        totalAmount: "$250.00",
-        paymentMethod: "Credit Card",
+const props = defineProps({
+    orders: {
+        type: Object,
+        required: false,
     },
-    {
-        invoice: "INV002",
-        paymentStatus: "Pending",
-        totalAmount: "$150.00",
-        paymentMethod: "PayPal",
+    branches: {
+        type: Object,
+        required: true,
     },
-    {
-        invoice: "INV003",
-        paymentStatus: "Unpaid",
-        totalAmount: "$350.00",
-        paymentMethod: "Bank Transfer",
-    },
-    {
-        invoice: "INV004",
-        paymentStatus: "Paid",
-        totalAmount: "$450.00",
-        paymentMethod: "Credit Card",
-    },
-    {
-        invoice: "INV005",
-        paymentStatus: "Paid",
-        totalAmount: "$550.00",
-        paymentMethod: "PayPal",
-    },
-    {
-        invoice: "INV006",
-        paymentStatus: "Pending",
-        totalAmount: "$200.00",
-        paymentMethod: "Bank Transfer",
-    },
-    {
-        invoice: "INV007",
-        paymentStatus: "Unpaid",
-        totalAmount: "$300.00",
-        paymentMethod: "Credit Card",
-    },
-];
+});
+
+console.log(props.branches);
 </script>
 
 <template>
@@ -92,13 +60,17 @@ const invoices = [
                         <Label>Item</Label>
                         <Select>
                             <SelectTrigger>
-                                <SelectValue placeholder="Select Item" />
+                                <SelectValue placeholder="Select Store" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
                                     <SelectLabel>Select Store</SelectLabel>
-                                    <SelectItem value="apple">
-                                        Apple
+                                    <SelectItem
+                                        v-for="(value, key) in branches"
+                                        :key="key"
+                                        :value="key"
+                                    >
+                                        {{ value }}
                                     </SelectItem>
                                 </SelectGroup>
                             </SelectContent>
@@ -127,32 +99,29 @@ const invoices = [
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead class="w-[100px]">
-                                    Invoice
-                                </TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Method</TableHead>
-                                <TableHead class="text-right">
-                                    Amount
-                                </TableHead>
+                                <TableHead> Item </TableHead>
+                                <TableHead> Code </TableHead>
+                                <TableHead> Unit </TableHead>
+                                <TableHead> Quantity </TableHead>
+                                <TableHead> Action </TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
                             <TableRow
-                                v-for="invoice in invoices"
-                                :key="invoice.invoice"
+                                v-for="order in orders"
+                                :key="order.item_code"
                             >
-                                <TableCell class="font-medium">
-                                    {{ invoice.invoice }}
+                                <TableCell>
+                                    {{ order.item_name }}
                                 </TableCell>
-                                <TableCell>{{
-                                    invoice.paymentStatus
-                                }}</TableCell>
-                                <TableCell>{{
-                                    invoice.paymentMethod
-                                }}</TableCell>
-                                <TableCell class="text-right">
-                                    {{ invoice.totalAmount }}
+                                <TableCell>
+                                    {{ order.item_code }}
+                                </TableCell>
+                                <TableCell>
+                                    {{ order.unit }}
+                                </TableCell>
+                                <TableCell>
+                                    {{ order.quantity }}
                                 </TableCell>
                             </TableRow>
                         </TableBody>

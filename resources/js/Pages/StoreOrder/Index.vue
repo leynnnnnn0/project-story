@@ -41,6 +41,7 @@ import {
 } from "@/components/ui/table";
 
 import { useForm } from "@inertiajs/vue3";
+import FormError from "@/Components/FormError.vue";
 
 const form = useForm({
     store: null,
@@ -49,7 +50,15 @@ const form = useForm({
 });
 
 const proceed = () => {
-    console.log(form);
+    form.post(route("store-orders.orders-list"), {
+        preserveScroll: true,
+        onSuccess: () => {
+            console.log("success");
+        },
+        onError: (errors) => {
+            console.log(errors);
+        },
+    });
 };
 
 import { ref } from "vue";
@@ -157,10 +166,14 @@ const statusClass = (status) =>
                                 </SelectGroup>
                             </SelectContent>
                         </Select>
+                        <FormError>{{ form.errors.store }}</FormError>
                     </div>
                     <div class="flex flex-col space-y-1">
                         <Label>SO Date</Label>
                         <Input type="date" v-model="form.store_order_date" />
+                        <FormError>{{
+                            form.errors.store_order_date
+                        }}</FormError>
                     </div>
                     <div class="flex flex-col space-y-1">
                         <Label>Orders</Label>
@@ -168,6 +181,7 @@ const statusClass = (status) =>
                             type="file"
                             @input="form.orders_list = $event.target.files[0]"
                         />
+                        <FormError>{{ form.errors.orders_list }}</FormError>
                     </div>
                     <div class="flex flex-col space-y-1">
                         <Label>Orders Templates</Label>

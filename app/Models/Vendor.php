@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\HasSelections;
 use Illuminate\Database\Eloquent\Model;
 
 class Vendor extends Model
 {
-
+    use HasSelections;
     protected $table = 'vendormasterfile';
     protected $fillable = [
         'name'

@@ -13,4 +13,10 @@ class DashboardController extends Controller
     {
         return Inertia::render('Dashboard/Index');
     }
+
+    public function test()
+    {
+        $data = DB::table('branch')->get();
+        return response()->json(['test' => $data]);
+    }
 }
