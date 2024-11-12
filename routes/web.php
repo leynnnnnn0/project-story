@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExcelTemplateController;
+use App\Http\Controllers\OrderApprovalController;
 use App\Http\Controllers\StoreOrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +44,10 @@ Route::middleware('auth')
                 Route::post('/store-orders', 'getImportedOrders')
                     ->name('imported-file');
             });
+
+        Route::controller(OrderApprovalController::class)->name('order-approval.')->group(function () {
+            Route::get('/orders-approval', 'index')->name('index');
+        });
 
 
 

@@ -76,24 +76,23 @@ const itemForm = useForm({
 });
 
 // Nat - (This function will just check if the value item select changed to set the UOM accordingly)
-watch(
-    () => itemForm.item,
-    (newValue) => {
-        if (newValue) {
-            isLoading.value = true;
-            axios
-                .get(route("product.show", newValue))
-                .then((response) => response.data)
-                .then((result) => {
-                    productDetails.item_name = result.InventoryName;
-                    productDetails.item_code = result.InventoryID;
-                    productDetails.unit = result.Packaging;
-                })
-                .catch((err) => console.log(err))
-                .finally(() => (isLoading.value = false));
-        }
+watch(productId, (newValue) => {
+    if (newValue) {
+        isLoading.value = true;
+        itemForm.item = newValue;
+        axios
+            .get(route("product.show", newValue))
+            .then((response) => response.data)
+            .then((result) => {
+                productDetails.item_name = result.InventoryName;
+                productDetails.item_code = result.InventoryID;
+                productDetails.unit = result.Packaging;
+                console.log(productDetails);
+            })
+            .catch((err) => console.log(err))
+            .finally(() => (isLoading.value = false));
     }
-);
+});
 
 const importOrdersButton = () => {
     visible.value = true;
@@ -102,6 +101,7 @@ const importOrdersButton = () => {
 const orders = ref([]);
 
 const addToOrdersButton = () => {
+    itemForm.quantity = productDetails.quantity;
     if (!itemForm.item) {
         itemForm.setError("item", "Item field is required");
         console.log(itemForm.quantity);
@@ -110,12 +110,15 @@ const addToOrdersButton = () => {
         itemForm.setError("quantity", "Quantity field is required");
         console.log(itemForm.quantity);
     }
+
     if (
         !productDetails.item_code ||
         !productDetails.item_name ||
         !productDetails.unit ||
         !productDetails.quantity
     ) {
+        console.log("test");
+
         return;
     }
 
@@ -141,6 +144,8 @@ const addToOrdersButton = () => {
         detail: "Item added successfully.",
         life: 5000,
     });
+    itemForm.item = null;
+    itemForm.clearErrors();
 };
 
 // Nat - (getting the imported data)
@@ -217,7 +222,7 @@ const proceedButton = () => {
                     <CardContent class="space-y-3">
                         <div class="space-y-1">
                             <Label>Item</Label>
-                            <Select v-model="itemForm.item">
+                            <Select v-model="productId">
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select Item" />
                                 </SelectTrigger>
@@ -246,7 +251,10 @@ const proceedButton = () => {
                         </div>
                         <div class="flex flex-col space-y-1">
                             <Label>Quantity</Label>
-                            <Input type="number" v-model="itemForm.quantity" />
+                            <Input
+                                type="number"
+                                v-model="productDetails.quantity"
+                            />
                             <FormError>{{
                                 itemForm.errors.quantity
                             }}</FormError>
@@ -262,7 +270,7 @@ const proceedButton = () => {
             </section>
             <Card class="col-span-2">
                 <CardHeader>
-                    <CardTitle>Your Orders</CardTitle>
+                    <CardTitle>Items List</CardTitle>
                     <CardDescription>SO Number: NNABA-0001</CardDescription>
                 </CardHeader>
                 <CardContent>
