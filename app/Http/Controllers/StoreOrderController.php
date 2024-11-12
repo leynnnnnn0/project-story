@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Api\StoreOrderRequest;
 use App\Imports\OrderListImport;
+use App\Models\Branch;
 use Inertia\Inertia;
 use App\Models\Order;
 use App\Models\Product;
@@ -29,8 +30,10 @@ class StoreOrderController extends Controller
             ->limit(10)
             ->get()
             ->pluck('InventoryName', 'ID');
+        $branches = Branch::options();
         return Inertia::render('StoreOrder/Create', [
-            'products' => $products
+            'products' => $products,
+            'branches' => $branches
         ]);
     }
 

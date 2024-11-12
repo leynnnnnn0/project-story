@@ -42,15 +42,18 @@ const props = defineProps({
         type: Object,
         required: false,
     },
+    branches: {
+        type: Object,
+        required: true,
+    },
 });
 
 import { ref, reactive, watch } from "vue";
 import { useForm } from "@inertiajs/vue3";
 
 const productId = ref(null);
-const itemDetails = ref(null);
 const orderDate = ref(props.orderDate);
-const unitOfMeasurment = ref(null);
+const store = ref(null);
 const visible = ref(false);
 
 const productDetails = reactive({
@@ -71,8 +74,6 @@ watch(productId, (newValue) => {
             .get(route("product.show", newValue))
             .then((response) => response.data)
             .then((result) => {
-                itemDetails.value = result;
-                unitOfMeasurment.value = result.Packaging;
                 productDetails.item_name = result.InventoryName;
                 productDetails.item_code = result.InventoryID;
                 productDetails.unit = result.Packaging;
@@ -88,7 +89,31 @@ const importOrdersButton = () => {
 const orders = ref([]);
 
 const addToOrdersButton = () => {
-    orders.value.push({ ...productDetails });
+    if (
+        !productDetails.item_code ||
+        !productDetails.item_name ||
+        !productDetails.unit ||
+        !productDetails.quantity
+    ) {
+        return;
+    }
+
+    const existingItemIndex = orders.value.findIndex(
+        (order) => order.item_code === productDetails.item_code
+    );
+
+    if (existingItemIndex !== -1) {
+        orders.value[existingItemIndex].quantity += Number(
+            productDetails.quantity
+        );
+    } else {
+        orders.value.push({ ...productDetails });
+    }
+
+    Object.keys(productDetails).forEach((key) => {
+        productDetails[key] = null;
+    });
+    productId.value = null;
 };
 
 // Nat - (getting the imported data)
@@ -120,56 +145,93 @@ const proceedButton = () => {
         :handleClick="importOrdersButton"
     >
         <div class="grid grid-cols-3 gap-5">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Add Item</CardTitle>
-                </CardHeader>
-                <CardContent class="space-y-3">
-                    <div class="flex flex-col space-y-1">
-                        <Label>SO Date</Label>
-                        <Input type="date" v-model="orderDate" />
-                    </div>
-                    <div class="space-y-1">
-                        <Label>Item</Label>
-                        <Select v-model="productId">
-                            <SelectTrigger>
-                                <SelectValue placeholder="Select Store" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectGroup>
-                                    <SelectLabel>Select Store</SelectLabel>
-                                    <SelectItem
-                                        v-for="(value, key) in products"
-                                        :key="key"
-                                        :value="key"
-                                    >
-                                        {{ value }}
-                                    </SelectItem>
-                                </SelectGroup>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                    <div class="flex flex-col space-y-1">
-                        <Label>Unit Of Measurement (UOM)</Label>
-                        <Input
-                            type="text"
-                            disabled
-                            v-model="productDetails.unit"
-                        />
-                    </div>
-                    <div class="flex flex-col space-y-1">
-                        <Label>Quantity</Label>
-                        <Input
-                            type="number"
-                            v-model="productDetails.quantity"
-                        />
-                    </div>
-                </CardContent>
+            <section class="grid gap-5">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Order Details</CardTitle>
+                        <CardDescription
+                            >Please input all the fields</CardDescription
+                        >
+                    </CardHeader>
+                    <CardContent class="space-y-3">
+                        <div class="space-y-1">
+                            <Label>Store</Label>
+                            <Select v-model="store">
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select Store" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Select Store</SelectLabel>
+                                        <SelectItem
+                                            v-for="(value, key) in branches"
+                                            :key="key"
+                                            :value="key"
+                                        >
+                                            {{ value }}
+                                        </SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div class="flex flex-col space-y-1">
+                            <Label>SO Date</Label>
+                            <Input type="date" v-model="orderDate" />
+                        </div>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Add Item</CardTitle>
+                        <CardDescription
+                            >Please input all the fields</CardDescription
+                        >
+                    </CardHeader>
+                    <CardContent class="space-y-3">
+                        <div class="space-y-1">
+                            <Label>Item</Label>
+                            <Select v-model="productId">
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select Item" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Select Store</SelectLabel>
+                                        <SelectItem
+                                            v-for="(value, key) in products"
+                                            :key="key"
+                                            :value="key"
+                                        >
+                                            {{ value }}
+                                        </SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div class="flex flex-col space-y-1">
+                            <Label>Unit Of Measurement (UOM)</Label>
+                            <Input
+                                type="text"
+                                disabled
+                                v-model="productDetails.unit"
+                            />
+                        </div>
+                        <div class="flex flex-col space-y-1">
+                            <Label>Quantity</Label>
+                            <Input
+                                type="number"
+                                v-model="productDetails.quantity"
+                            />
+                        </div>
+                    </CardContent>
 
-                <CardFooter class="flex justify-end">
-                    <Button @click="addToOrdersButton">Add to Orders</Button>
-                </CardFooter>
-            </Card>
+                    <CardFooter class="flex justify-end">
+                        <Button @click="addToOrdersButton"
+                            >Add to Orders</Button
+                        >
+                    </CardFooter>
+                </Card>
+            </section>
             <Card class="col-span-2">
                 <CardHeader>
                     <CardTitle>Your Orders</CardTitle>
