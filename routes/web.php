@@ -37,8 +37,11 @@ Route::middleware('auth')
                 Route::post('/orders-list', 'validateHeaderUpload')
                     ->name('orders-list');
 
-                Route::get('/store-orders/create', 'create')
+                Route::get('/create', 'create')
                     ->name('store-orders-create');
+
+                Route::post('/store-orders', 'getImportedOrders')
+                    ->name('imported-file');
             });
 
 

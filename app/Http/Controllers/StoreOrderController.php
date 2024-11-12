@@ -16,22 +16,35 @@ class StoreOrderController extends Controller
     public function index()
     {
         $orders = Order::with(['branch', 'vendor'])->get();
-        $branches = Branch::options();
-        $vendors = Vendor::options();
 
         return Inertia::render(
             'StoreOrder/Index',
             [
                 'orders' => $orders,
-                'branches' => $branches,
-                'vendors' => $vendors
             ]
         );
     }
 
     public function create()
     {
-        return Inertia::render('StoreOrder/Create');
+        $products = Product::select('ID', 'InventoryName')
+            ->limit(10)
+            ->get()
+            ->pluck('InventoryName', 'ID');
+        return Inertia::render('StoreOrder/Create', [
+            'products' => $products
+        ]);
+    }
+
+    public function getImportedOrders(StoreOrderRequest $storeOrderRequest)
+    {
+        $import = new OrderListImport();
+        Excel::import($import, $storeOrderRequest->file('orders_file'));
+        $importedCollection = $import->getImportedData();
+        return response()->json([
+
+            'orders' => $importedCollection
+        ]);
     }
 
     public function validateHeaderUpload(StoreOrderRequest $storeOrderRequest)

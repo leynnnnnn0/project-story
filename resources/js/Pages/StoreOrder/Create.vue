@@ -10,7 +10,6 @@ import {
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
@@ -28,28 +27,38 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import FormError from "@/Components/FormError.vue";
 
 const props = defineProps({
-    orders: {
-        type: Object,
-        required: false,
-    },
     products: {
         type: Object,
-        required: true,
-    },
-    orderDate: {
-        type: String,
-        required: true,
+        required: false,
     },
 });
 
 import { ref, watch } from "vue";
+import { useForm } from "@inertiajs/vue3";
 
 const productId = ref(null);
 const itemDetails = ref(null);
 const orderDate = ref(props.orderDate);
 const unitOfMeasurment = ref(null);
+const visible = ref(false);
+
+const form = useForm({
+    orders_file: null,
+});
+
+// Nat - (This function will just check if the value item select changed to set the UOM accordingly)
 watch(productId, (newValue) => {
     if (newValue) {
         axios
@@ -62,15 +71,43 @@ watch(productId, (newValue) => {
             .catch((err) => console.log(err));
     }
 });
+
+const importOrdersButton = () => {
+    visible.value = true;
+};
+const orders = ref([]);
+
+const proceedButton = () => {
+    const formData = new FormData();
+    formData.append("orders_file", form.orders_file);
+
+    axios
+        .post(route("store-orders.imported-file"), formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        })
+        .then((response) => {
+            orders.value = response.data.orders;
+            visible.value = false;
+        })
+        .catch((error) => {
+            form.setError("orders_file", error.response.data.message);
+        });
+};
 </script>
 
 <template>
-    <Layout heading="Store Order > Create">
+    <Layout
+        heading="Store Order > Create"
+        :hasButton="true"
+        buttonName="Import Orders"
+        :handleClick="importOrdersButton"
+    >
         <div class="grid grid-cols-3 gap-5">
             <Card>
                 <CardHeader>
                     <CardTitle>Add Item</CardTitle>
-                    <CardDescription>SO Number: NNABA-0001</CardDescription>
                 </CardHeader>
                 <CardContent class="space-y-3">
                     <div class="flex flex-col space-y-1">
@@ -118,7 +155,7 @@ watch(productId, (newValue) => {
             <Card class="col-span-2">
                 <CardHeader>
                     <CardTitle>Your Orders</CardTitle>
-                    <CardDescription>Items on your order list.</CardDescription>
+                    <CardDescription>SO Number: NNABA-0001</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Table>
@@ -154,5 +191,44 @@ watch(productId, (newValue) => {
                 </CardContent>
             </Card>
         </div>
+
+        <Dialog v-model:open="visible">
+            <DialogContent class="sm:max-w-[600px]">
+                <DialogHeader>
+                    <DialogTitle>Import Orders</DialogTitle>
+                    <DialogDescription>
+                        Import the excel file of your orders.
+                    </DialogDescription>
+                </DialogHeader>
+                <div class="space-y-5">
+                    <div class="flex flex-col space-y-1">
+                        <Label>Orders</Label>
+                        <Input
+                            type="file"
+                            @input="form.orders_file = $event.target.files[0]"
+                        />
+                        <FormError>{{ form.errors.orders_file }}</FormError>
+                    </div>
+                    <div class="flex flex-col space-y-1">
+                        <Label class="text-xs">Order Templates</Label>
+                        <ul>
+                            <li class="text-xs">
+                                GSI BAKERY:
+                                <a
+                                    class="text-blue-500 underline"
+                                    href="/excel/gsi-bakery-template"
+                                    >Click to download</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button @click="proceedButton" type="submit">
+                        Proceed
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     </Layout>
 </template>

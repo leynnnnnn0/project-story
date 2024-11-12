@@ -22,9 +22,9 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'store' => ['required', 'exists:Branch,id'],
-            'store_order_date' => ['required', 'date'],
-            'orders_list' => ['required', 'file', 'mimes:xls,xlsx']
+            // 'store' => ['required', 'exists:Branch,id'],
+            // 'store_order_date' => ['required', 'date'],
+            'orders_file' => ['required', 'file', 'mimes:xls,xlsx']
         ];
     }
 }
