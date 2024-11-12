@@ -17,7 +17,7 @@ import {
     Package,
     Package2,
 } from "lucide-vue-next";
-
+import Toast from "primevue/toast";
 
 import NavLink from "../Components/NavLink.vue";
 
@@ -45,6 +45,7 @@ const isActive = (route) => {
 </script>
 
 <template>
+    <Toast />
     <div
         class="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]"
     >

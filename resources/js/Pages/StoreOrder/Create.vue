@@ -50,11 +50,14 @@ const props = defineProps({
 
 import { ref, reactive, watch } from "vue";
 import { useForm } from "@inertiajs/vue3";
+import { useToast } from "primevue/usetoast";
 
 const productId = ref(null);
 const orderDate = ref(props.orderDate);
 const store = ref(null);
 const visible = ref(false);
+const toast = useToast();
+const isLoading = ref(false);
 
 const productDetails = reactive({
     item_code: null,
@@ -67,20 +70,30 @@ const form = useForm({
     orders_file: null,
 });
 
-// Nat - (This function will just check if the value item select changed to set the UOM accordingly)
-watch(productId, (newValue) => {
-    if (newValue) {
-        axios
-            .get(route("product.show", newValue))
-            .then((response) => response.data)
-            .then((result) => {
-                productDetails.item_name = result.InventoryName;
-                productDetails.item_code = result.InventoryID;
-                productDetails.unit = result.Packaging;
-            })
-            .catch((err) => console.log(err));
-    }
+const itemForm = useForm({
+    item: null,
+    quantity: null,
 });
+
+// Nat - (This function will just check if the value item select changed to set the UOM accordingly)
+watch(
+    () => itemForm.item,
+    (newValue) => {
+        if (newValue) {
+            isLoading.value = true;
+            axios
+                .get(route("product.show", newValue))
+                .then((response) => response.data)
+                .then((result) => {
+                    productDetails.item_name = result.InventoryName;
+                    productDetails.item_code = result.InventoryID;
+                    productDetails.unit = result.Packaging;
+                })
+                .catch((err) => console.log(err))
+                .finally(() => (isLoading.value = false));
+        }
+    }
+);
 
 const importOrdersButton = () => {
     visible.value = true;
@@ -89,6 +102,14 @@ const importOrdersButton = () => {
 const orders = ref([]);
 
 const addToOrdersButton = () => {
+    if (!itemForm.item) {
+        itemForm.setError("item", "Item field is required");
+        console.log(itemForm.quantity);
+    }
+    if (!itemForm.quantity) {
+        itemForm.setError("quantity", "Quantity field is required");
+        console.log(itemForm.quantity);
+    }
     if (
         !productDetails.item_code ||
         !productDetails.item_name ||
@@ -114,6 +135,12 @@ const addToOrdersButton = () => {
         productDetails[key] = null;
     });
     productId.value = null;
+    toast.add({
+        severity: "success",
+        summary: "Success",
+        detail: "Item added successfully.",
+        life: 5000,
+    });
 };
 
 // Nat - (getting the imported data)
@@ -190,7 +217,7 @@ const proceedButton = () => {
                     <CardContent class="space-y-3">
                         <div class="space-y-1">
                             <Label>Item</Label>
-                            <Select v-model="productId">
+                            <Select v-model="itemForm.item">
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select Item" />
                                 </SelectTrigger>
@@ -207,6 +234,7 @@ const proceedButton = () => {
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
+                            <FormError>{{ itemForm.errors.item }}</FormError>
                         </div>
                         <div class="flex flex-col space-y-1">
                             <Label>Unit Of Measurement (UOM)</Label>
@@ -218,17 +246,17 @@ const proceedButton = () => {
                         </div>
                         <div class="flex flex-col space-y-1">
                             <Label>Quantity</Label>
-                            <Input
-                                type="number"
-                                v-model="productDetails.quantity"
-                            />
+                            <Input type="number" v-model="itemForm.quantity" />
+                            <FormError>{{
+                                itemForm.errors.quantity
+                            }}</FormError>
                         </div>
                     </CardContent>
 
                     <CardFooter class="flex justify-end">
-                        <Button @click="addToOrdersButton"
-                            >Add to Orders</Button
-                        >
+                        <Button @click="addToOrdersButton">
+                            Add to Orders
+                        </Button>
                     </CardFooter>
                 </Card>
             </section>
@@ -304,8 +332,9 @@ const proceedButton = () => {
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button @click="proceedButton" type="submit">
+                    <Button @click="proceedButton" type="submit" class="gap-2">
                         Proceed
+                        <span><Loading v-if="isLoading" /></span>
                     </Button>
                 </DialogFooter>
             </DialogContent>

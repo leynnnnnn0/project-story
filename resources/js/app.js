@@ -7,15 +7,10 @@ import { createApp, h } from "vue";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 import PrimeVue from "primevue/config";
 import Layout from "./Layouts/App.vue";
-
-// resolve: (name) => {
-//     const pages = import.meta.glob("./Pages/**/*.vue", { eager: true });
-//     let page = pages[`./Pages/${name}.vue`];
-//     if (!page.default.layout) {
-//         page.default.layout = Layout;
-//     }
-//     return page;
-// },
+import ToastService from "primevue/toastservice";
+import Aura from "@primevue/themes/aura";
+import { Button } from "@/components/ui/button";
+import Loading from "./Components/Loading.vue";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -31,9 +26,19 @@ createInertiaApp({
             .use(plugin)
             .use(ZiggyVue)
             .component("Layout", Layout)
+            .component("Button", Button)
+            .component("Loading", Loading)
             .use(PrimeVue, {
-                theme: {},
+                theme: {
+                    preset: Aura,
+                    options: {
+                        prefix: "p",
+                        darkModeSelector: "system",
+                        cssLayer: false,
+                    },
+                },
             })
+            .use(ToastService)
             .mount(el);
     },
     progress: {
