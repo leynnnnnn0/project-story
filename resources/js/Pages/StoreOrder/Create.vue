@@ -34,7 +34,6 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog";
 import FormError from "@/Components/FormError.vue";
 
@@ -45,7 +44,7 @@ const props = defineProps({
     },
 });
 
-import { ref, watch } from "vue";
+import { ref, reactive, watch } from "vue";
 import { useForm } from "@inertiajs/vue3";
 
 const productId = ref(null);
@@ -53,6 +52,13 @@ const itemDetails = ref(null);
 const orderDate = ref(props.orderDate);
 const unitOfMeasurment = ref(null);
 const visible = ref(false);
+
+const productDetails = reactive({
+    item_code: null,
+    item_name: null,
+    unit: null,
+    quantity: null,
+});
 
 const form = useForm({
     orders_file: null,
@@ -67,6 +73,9 @@ watch(productId, (newValue) => {
             .then((result) => {
                 itemDetails.value = result;
                 unitOfMeasurment.value = result.Packaging;
+                productDetails.item_name = result.InventoryName;
+                productDetails.item_code = result.InventoryID;
+                productDetails.unit = result.Packaging;
             })
             .catch((err) => console.log(err));
     }
@@ -75,8 +84,14 @@ watch(productId, (newValue) => {
 const importOrdersButton = () => {
     visible.value = true;
 };
+
 const orders = ref([]);
 
+const addToOrdersButton = () => {
+    orders.value.push({ ...productDetails });
+};
+
+// Nat - (getting the imported data)
 const proceedButton = () => {
     const formData = new FormData();
     formData.append("orders_file", form.orders_file);
@@ -88,7 +103,7 @@ const proceedButton = () => {
             },
         })
         .then((response) => {
-            orders.value = response.data.orders;
+            orders.value = [...orders.value, ...response.data.orders];
             visible.value = false;
         })
         .catch((error) => {
@@ -139,17 +154,20 @@ const proceedButton = () => {
                         <Input
                             type="text"
                             disabled
-                            v-model="unitOfMeasurment"
+                            v-model="productDetails.unit"
                         />
                     </div>
                     <div class="flex flex-col space-y-1">
                         <Label>Quantity</Label>
-                        <Input type="number" />
+                        <Input
+                            type="number"
+                            v-model="productDetails.quantity"
+                        />
                     </div>
                 </CardContent>
 
                 <CardFooter class="flex justify-end">
-                    <Button>Add to Orders</Button>
+                    <Button @click="addToOrdersButton">Add to Orders</Button>
                 </CardFooter>
             </Card>
             <Card class="col-span-2">
