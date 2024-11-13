@@ -18,6 +18,7 @@ import {
     Package2,
 } from "lucide-vue-next";
 import Toast from "primevue/toast";
+import { router } from "@inertiajs/vue3";
 
 import NavLink from "../Components/NavLink.vue";
 
@@ -41,6 +42,10 @@ defineProps({
 import { usePage } from "@inertiajs/vue3";
 const isActive = (route) => {
     return usePage().url.includes(route);
+};
+
+const logout = () => {
+    router.post("/logout");
 };
 </script>
 
@@ -167,7 +172,9 @@ const isActive = (route) => {
                         <DropdownMenuItem>Settings</DropdownMenuItem>
                         <DropdownMenuItem>Support</DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>Logout</DropdownMenuItem>
+                        <DropdownMenuItem>
+                            <button @click="logout">Logout</button>
+                        </DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
             </header>
