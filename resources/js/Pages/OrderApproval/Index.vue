@@ -1,4 +1,65 @@
-<script setup></script>
+<script setup>
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+
+const props = defineProps({
+    orders: {
+        type: Object,
+    },
+});
+</script>
 <template>
-    <Layout> </Layout>
+    <Layout heading="Orders For Approval List">
+        <Card>
+            <CardHeader>
+                <CardDescription
+                    >Recent transactions from your orders.</CardDescription
+                >
+            </CardHeader>
+            <CardContent>
+                <Table>
+                    <TableCaption>A list of orders for approval.</TableCaption>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead> Order Placed At </TableHead>
+                            <TableHead> SO Date</TableHead>
+                            <TableHead> SO Number</TableHead>
+                            <TableHead> Total Item</TableHead>
+                            <TableHead> Total Quantity </TableHead>
+                            <TableHead> Created By</TableHead>
+                            <TableHead> Vendor </TableHead>
+                            <TableHead> Branch </TableHead>
+                            <TableHead> Status </TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        <TableCell></TableCell>
+                        <TableCell></TableCell>
+                        <TableCell></TableCell>
+                        <TableCell></TableCell>
+                        <TableCell></TableCell>
+                        <TableCell></TableCell>
+                        <TableCell></TableCell>
+                        <TableCell></TableCell>
+                        <TableCell></TableCell>
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
+    </Layout>
 </template>
