@@ -47,16 +47,16 @@ const props = defineProps({
                             <TableHead> Status </TableHead>
                         </TableRow>
                     </TableHeader>
-                    <TableBody>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
-                        <TableCell></TableCell>
+                    <TableBody v-for="order in orders">
+                        <TableCell>{{ order.OrderDate }}</TableCell>
+                        <TableCell>{{ order.SODate }}</TableCell>
+                        <TableCell>{{ order.SONumber }}</TableCell>
+                        <TableCell>{{ order.TOTAL_ITEM }}</TableCell>
+                        <TableCell>{{ order.TotalQuantity }}</TableCell>
+                        <TableCell>{{ order.CreatedBy }}</TableCell>
+                        <TableCell>{{ order.Vendor }}</TableCell>
+                        <TableCell>{{ order.Branch }}</TableCell>
+                        <TableCell>{{ order.STATUS }}</TableCell>
                     </TableBody>
                 </Table>
             </CardContent>

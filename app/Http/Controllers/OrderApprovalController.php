@@ -11,7 +11,7 @@ class OrderApprovalController extends Controller
 {
     public function index()
     {
-        $orders = DB::table('transactionheader')->get();
+        $orders = DB::select("CALL SP_GET_LIST_SOAPPROVAL(-1)");
         return Inertia::render('OrderApproval/Index', [
             'orders' => $orders
         ]);
