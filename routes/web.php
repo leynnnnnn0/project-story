@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExcelTemplateController;
 use App\Http\Controllers\OrderApprovalController;
 use App\Http\Controllers\StoreOrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+
+Route::redirect('/', '/dashboard');
 
 Route::middleware('auth')
     ->group(function () {
@@ -47,6 +50,10 @@ Route::middleware('auth')
 
         Route::controller(OrderApprovalController::class)->name('order-approval.')->group(function () {
             Route::get('/orders-approval', 'index')->name('index');
+        });
+
+        Route::controller(CategoryController::class)->name('category.')->group(function () {
+            Route::get('/category-list', 'index')->name('index');
         });
 
 

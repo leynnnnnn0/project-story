@@ -75,7 +75,7 @@ const isActive = (route) => {
                             Dashboard
                         </NavLink>
                         <DropdownMenuLabel> Ordering </DropdownMenuLabel>
-                        <NavLink href="/store-orders" :icon="Home">
+                        <NavLink href="/store-orders" :icon="Package">
                             Store Orders
                         </NavLink>
                         <NavLink href="/orders-approval" :icon="Home">
@@ -86,6 +86,9 @@ const isActive = (route) => {
                         <DropdownMenuLabel> Inventory </DropdownMenuLabel>
                         <DropdownMenuLabel> Reports </DropdownMenuLabel>
                         <DropdownMenuLabel> Reference </DropdownMenuLabel>
+                        <NavLink href="/category-list" :icon="Home">
+                            Categories
+                        </NavLink>
                         <DropdownMenuLabel> User </DropdownMenuLabel>
                     </nav>
                 </div>
