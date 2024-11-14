@@ -16,17 +16,30 @@ class StoreOrderController extends Controller
     {
         $from = request('from') ?? '2000-01-01';
         $to = request('to') ? date('Y-m-d', strtotime(request('to') . ' +1 day')) : now()->addDay();
+        $branchId = request('branchId');
+        $search = request('search');
 
-        $orders = Order::with(['branch', 'vendor'])
-            ->whereBetween('created_at', [$from, $to])
+        $query = Order::query()->with(['branch', 'vendor']);
+
+        if ($branchId)
+            $query->where('BranchID', $branchId);
+
+        if ($search)
+            $query->where('SONumber', 'like', '%' . $search . '%');
+
+        $orders = $query
+            ->whereBetween('OrderDate', [$from, $to])
             ->latest()
             ->paginate(10);
+
+        $branches = Branch::options();
 
         return Inertia::render(
             'StoreOrder/Index',
             [
                 'orders' => $orders,
-                'filters' => request()->only(['from', 'to'])
+                'branches' => $branches,
+                'filters' => request()->only(['from', 'to', 'branchId', 'search'])
             ]
         );
     }

@@ -11,6 +11,16 @@ import {
 import { Filter } from "lucide-vue-next";
 import { ref, watch } from "vue";
 import { usePage } from "@inertiajs/vue3";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { throttle } from "lodash";
 const handleClick = () => {
     router.get("/store-orders/create");
 };
@@ -19,10 +29,15 @@ const props = defineProps({
     orders: {
         type: Object,
     },
+    branches: {
+        type: Object,
+    },
 });
 
 let from = ref(usePage().props.from);
 let to = ref(usePage().props.to);
+let branchId = ref(usePage().props.branchId);
+let search = ref(usePage().props.search);
 
 watch(from, (value) => {
     router.get(
@@ -46,13 +61,45 @@ watch(to, (value) => {
     );
 });
 
-const statusClass = (status) =>
-    status === "RECEIVED"
-        ? "bg-green-500 text-white"
-        : "bg-yellow-500 text-white";
+watch(branchId, (value) => {
+    router.get(
+        route("store-orders.index"),
+        { branchId: value },
+        {
+            preserveState: true,
+            preserveScroll: true,
+        }
+    );
+});
 
+watch(
+    search,
+    throttle(function (value) {
+        router.get(
+            route("store-orders.index"),
+            { search: value },
+            {
+                preserveState: true,
+                replace: true,
+            }
+        );
+    }, 500)
+);
+
+const statusClass = (status) => {
+    switch (status) {
+        case "RECEIVED":
+            return "bg-green-500 text-white";
+        case "PENDING":
+            return "bg-yellow-500 text-white";
+        case "INCOMPLETE":
+            return "bg-orange-500 text-white";
+        default:
+            return "bg-yellow-500 text-white";
+    }
+};
 const resetFilter = () => {
-    (from.value = null), (to.value = null);
+    (from.value = null), (to.value = null), (branchId.value = null);
 };
 </script>
 
@@ -69,8 +116,9 @@ const resetFilter = () => {
             <DivFlexCenter class="justify-between">
                 <!-- Search Bar-->
                 <Input
+                    v-model="search"
                     type="text"
-                    placeholder="Search..."
+                    placeholder="Order Number"
                     class="w-96 rounded-lg border-gray-200"
                 />
                 <DivFlexCenter class="gap-5">
@@ -90,6 +138,24 @@ const resetFilter = () => {
                             <Input type="date" v-model="from" />
                             <label class="text-xs">To</label>
                             <Input type="date" v-model="to" />
+                            <label class="text-xs">Store</label>
+                            <Select v-model="branchId">
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select a store" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Stores</SelectLabel>
+                                        <SelectItem
+                                            v-for="(value, key) in branches"
+                                            :key="key"
+                                            :value="key"
+                                        >
+                                            {{ value }}
+                                        </SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                         </PopoverContent>
                     </Popover>
                 </DivFlexCenter>
@@ -120,28 +186,30 @@ const resetFilter = () => {
                         <TD>{{ order.Total_Item }}</TD>
                         <TD>{{ order.TOTALQUANTITY ?? 0 }}</TD>
                         <TD>
-                            <Badge :class="statusClass(order.Status)">{{
-                                order.Status
-                            }}</Badge>
+                            <Badge
+                                :class="statusClass(order.Status)"
+                                class="font-bold"
+                                >{{ order.Status }}</Badge
+                            >
                         </TD>
                     </tr>
                 </tbody>
             </Table>
+            <div class="flex items-center justify-end gap-2">
+                <Component
+                    v-for="link in orders.links"
+                    :is="link.url ? 'Link' : 'span'"
+                    :href="link.url"
+                    v-html="link.label"
+                    class="px-3 py-1 border border-gray-200 text-primary-font font-bold rounded-lg"
+                    :class="{
+                        'bg-primary text-white': link.active,
+                        'hover:bg-primary/50 transition-colors transition-duration duration-300':
+                            link.url,
+                    }"
+                />
+            </div>
         </DivFlexCol>
-        <div class="flex items-center justify-end gap-2">
-            <Component
-                v-for="link in orders.links"
-                :is="link.url ? 'Link' : 'span'"
-                :href="link.url"
-                v-html="link.label"
-                class="px-3 py-1 border border-gray-200 text-primary-font font-bold rounded-lg"
-                :class="{
-                    'bg-primary text-white': link.active,
-                    'hover:bg-primary/50 transition-colors transition-duration duration-300':
-                        link.url,
-                }"
-            />
-        </div>
     </Layout>
 </template>
 
