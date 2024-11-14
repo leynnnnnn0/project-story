@@ -1,4 +1,5 @@
 const animate = require("tailwindcss-animate");
+import defaultTheme from "tailwindcss/defaultTheme";
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -22,6 +23,9 @@ module.exports = {
             },
         },
         extend: {
+            fontFamily: {
+                sans: ["Figtree", ...defaultTheme.fontFamily.sans],
+            },
             colors: {
                 border: "hsl(var(--border))",
                 input: "hsl(var(--input))",

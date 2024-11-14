@@ -14,12 +14,19 @@ class StoreOrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::with(['branch', 'vendor'])->get();
+        $from = request('from') ?? '2000-01-01';
+        $to = request('to') ? date('Y-m-d', strtotime(request('to') . ' +1 day')) : now()->addDay();
+
+        $orders = Order::with(['branch', 'vendor'])
+            ->whereBetween('created_at', [$from, $to])
+            ->latest()
+            ->paginate(10);
 
         return Inertia::render(
             'StoreOrder/Index',
             [
                 'orders' => $orders,
+                'filters' => request()->only(['from', 'to'])
             ]
         );
     }

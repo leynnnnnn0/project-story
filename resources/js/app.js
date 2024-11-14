@@ -11,7 +11,14 @@ import ToastService from "primevue/toastservice";
 import Aura from "@primevue/themes/aura";
 import { Button } from "@/components/ui/button";
 import Loading from "./Components/Loading.vue";
-
+import DivFlexCenter from "./Components/div/DivFlexCenter.vue";
+import DivFlexCol from "./Components/div/DivFlexCol.vue";
+import { Input } from "@/components/ui/input";
+import Table from "./Components/table/Table.vue";
+import TH from "./Components/table/TH.vue";
+import TD from "./Components/table/TD.vue";
+import { Link } from "@inertiajs/vue3";
+import Popover from "primevue/popover";
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
 createInertiaApp({
@@ -28,6 +35,14 @@ createInertiaApp({
             .component("Layout", Layout)
             .component("Button", Button)
             .component("Loading", Loading)
+            .component("DivFlexCenter", DivFlexCenter)
+            .component("DivFlexCol", DivFlexCol)
+            .component("Input", Input)
+            .component("Table", Table)
+            .component("TH", TH)
+            .component("TD", TD)
+            .component("Link", Link)
+            .component("Popover", Popover)
             .use(PrimeVue, {
                 theme: {
                     preset: Aura,

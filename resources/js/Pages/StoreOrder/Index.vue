@@ -1,24 +1,16 @@
 <script setup>
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
 import Layout from "@/Layouts/App.vue";
 import { Badge } from "@/components/ui/badge";
-import {
-    Table,
-    TableBody,
-    TableCaption,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "@/components/ui/table";
 import { router } from "@inertiajs/vue3";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
 
+import { Filter } from "lucide-vue-next";
+import { ref, watch } from "vue";
+import { usePage } from "@inertiajs/vue3";
 const handleClick = () => {
     router.get("/store-orders/create");
 };
@@ -27,6 +19,31 @@ const props = defineProps({
     orders: {
         type: Object,
     },
+});
+
+let from = ref(usePage().props.from);
+let to = ref(usePage().props.to);
+
+watch(from, (value) => {
+    router.get(
+        route("store-orders.index"),
+        { from: value, to: to.value },
+        {
+            preserveState: true,
+            preserveScroll: true,
+        }
+    );
+});
+
+watch(to, (value) => {
+    router.get(
+        route("store-orders.index"),
+        { from: from.value, to: value },
+        {
+            preserveState: true,
+            preserveScroll: true,
+        }
+    );
 });
 
 const statusClass = (status) =>
@@ -42,54 +59,76 @@ const statusClass = (status) =>
         buttonName="Create New Order"
         :handleClick="handleClick"
     >
-        <Card>
-            <CardHeader>
-                <CardDescription
-                    >Recent transactions from your orders.</CardDescription
-                >
-            </CardHeader>
-            <CardContent>
-                <Table>
-                    <TableCaption>A list of your recent orders.</TableCaption>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead> Id </TableHead>
-                            <TableHead> Vendor</TableHead>
-                            <TableHead> Store</TableHead>
-                            <TableHead> Order Placed At</TableHead>
-                            <TableHead> Order # </TableHead>
-                            <TableHead> Order Date </TableHead>
-                            <TableHead> Order Items </TableHead>
-                            <TableHead> Order Quantity </TableHead>
-                            <TableHead> Receiving Status </TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        <TableRow v-for="order in orders" :key="order.id">
-                            <TableCell>{{ order.Id }}</TableCell>
-                            <TableCell>{{
-                                order.vendor?.Name ?? "N/A"
-                            }}</TableCell>
-                            <TableCell>{{
-                                order.branch?.Name ?? "N/A"
-                            }}</TableCell>
-                            <TableCell>{{ order.created_at }}</TableCell>
-                            <TableCell>{{ order.SONumber }}</TableCell>
-                            <TableCell>{{ order.OrderDate }}</TableCell>
-                            <TableCell>{{ order.Total_Item }}</TableCell>
-                            <TableCell>{{
-                                order.TOTALQUANTITY ?? 0
-                            }}</TableCell>
-                            <TableCell>
-                                <Badge :class="statusClass(order.Status)">{{
-                                    order.Status
-                                }}</Badge>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
-                </Table>
-            </CardContent>
-        </Card>
+        <DivFlexCol
+            class="p-5 w-full h-full rounded-lg border border-gray/20 space-y-5"
+        >
+            <DivFlexCenter class="justify-between">
+                <!-- Search Bar-->
+                <Input
+                    type="text"
+                    placeholder="Search..."
+                    class="w-96 rounded-lg border-gray-200"
+                />
+                <DivFlexCenter class="gap-5">
+                    <Popover>
+                        <PopoverTrigger> <Filter /> </PopoverTrigger>
+                        <PopoverContent>
+                            <label class="text-xs">From</label>
+                            <Input type="date" v-model="from" />
+                            <label class="text-xs">To</label>
+                            <Input type="date" v-model="to" />
+                        </PopoverContent>
+                    </Popover>
+                </DivFlexCenter>
+            </DivFlexCenter>
+
+            <Table>
+                <thead>
+                    <tr>
+                        <TH>Id</TH>
+                        <TH>Vendor</TH>
+                        <TH>Store</TH>
+                        <TH>Order Placed At</TH>
+                        <TH>Order #</TH>
+                        <TH>Order Date</TH>
+                        <TH>Order Items</TH>
+                        <TH>Order Quantity</TH>
+                        <TH>Receiving Status</TH>
+                    </tr>
+                </thead>
+                <tbody class="divide-y">
+                    <tr v-for="order in orders.data" :key="order.id">
+                        <TD>{{ order.Id }}</TD>
+                        <TD>{{ order.vendor?.Name ?? "N/A" }}</TD>
+                        <TD>{{ order.branch?.Name ?? "N/A" }}</TD>
+                        <TD>{{ order.created_at }}</TD>
+                        <TD>{{ order.SONumber }}</TD>
+                        <TD>{{ order.OrderDate }}</TD>
+                        <TD>{{ order.Total_Item }}</TD>
+                        <TD>{{ order.TOTALQUANTITY ?? 0 }}</TD>
+                        <TD>
+                            <Badge :class="statusClass(order.Status)">{{
+                                order.Status
+                            }}</Badge>
+                        </TD>
+                    </tr>
+                </tbody>
+            </Table>
+        </DivFlexCol>
+        <div class="flex items-center justify-end gap-2">
+            <Component
+                v-for="link in orders.links"
+                :is="link.url ? 'Link' : 'span'"
+                :href="link.url"
+                v-html="link.label"
+                class="px-3 py-1 border border-gray-200 text-primary-font font-bold rounded-lg"
+                :class="{
+                    'bg-primary text-white': link.active,
+                    'hover:bg-primary/50 transition-colors transition-duration duration-300':
+                        link.url,
+                }"
+            />
+        </div>
     </Layout>
 </template>
 
