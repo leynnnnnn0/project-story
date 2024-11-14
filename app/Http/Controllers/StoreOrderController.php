@@ -35,6 +35,10 @@ class StoreOrderController extends Controller
 
         $branches = Branch::options();
 
+        // $orderNumber = DB::select("CALL SP_GET_LAST_SO_BYBRANCH(?)", [31]);
+
+
+
         return Inertia::render(
             'StoreOrder/Index',
             [

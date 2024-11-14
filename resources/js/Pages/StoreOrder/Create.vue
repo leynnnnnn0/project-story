@@ -52,8 +52,6 @@ import { ref, reactive, watch } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import { useToast } from "primevue/usetoast";
 
-
-
 const productId = ref(null);
 const orderDate = ref(props.orderDate);
 const store = ref(null);
@@ -152,6 +150,7 @@ const addToOrdersButton = () => {
 
 // Nat - (getting the imported data)
 const proceedButton = () => {
+    isLoading.value = true;
     const formData = new FormData();
     formData.append("orders_file", form.orders_file);
 
@@ -164,10 +163,17 @@ const proceedButton = () => {
         .then((response) => {
             orders.value = [...orders.value, ...response.data.orders];
             visible.value = false;
+            toast.add({
+                severity: "success",
+                summary: "Success",
+                detail: "Items added successfully.",
+                life: 5000,
+            });
         })
         .catch((error) => {
             form.setError("orders_file", error.response.data.message);
-        });
+        })
+        .finally(() => (isLoading.value = false));
 };
 </script>
 
@@ -273,13 +279,12 @@ const proceedButton = () => {
             <Card class="col-span-2">
                 <CardHeader>
                     <CardTitle>Items List</CardTitle>
-                    <CardDescription>SO Number: NNABA-0001</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead> Item </TableHead>
+                                <TableHead> Name </TableHead>
                                 <TableHead> Code </TableHead>
                                 <TableHead> Unit </TableHead>
                                 <TableHead> Quantity </TableHead>
