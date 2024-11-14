@@ -50,6 +50,10 @@ const statusClass = (status) =>
     status === "RECEIVED"
         ? "bg-green-500 text-white"
         : "bg-yellow-500 text-white";
+
+const resetFilter = () => {
+    (from.value = null), (to.value = null);
+};
 </script>
 
 <template>
@@ -73,6 +77,15 @@ const statusClass = (status) =>
                     <Popover>
                         <PopoverTrigger> <Filter /> </PopoverTrigger>
                         <PopoverContent>
+                            <div class="flex justify-end">
+                                <Button
+                                    @click="resetFilter"
+                                    variant="link"
+                                    class="text-end text-red-500 text-xs"
+                                >
+                                    Reset Filter
+                                </Button>
+                            </div>
                             <label class="text-xs">From</label>
                             <Input type="date" v-model="from" />
                             <label class="text-xs">To</label>
