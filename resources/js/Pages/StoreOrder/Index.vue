@@ -8,7 +8,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { Filter } from "lucide-vue-next";
+import { Filter, Eye } from "lucide-vue-next";
 import { ref, watch } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import {
@@ -21,6 +21,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { throttle } from "lodash";
+import { MagnifyingGlassIcon } from "@radix-icons/vue";
 const handleClick = () => {
     router.get("/store-orders/create");
 };
@@ -33,6 +34,10 @@ const props = defineProps({
         type: Object,
     },
 });
+
+const showOrderDetails = (id) => {
+    router.get(`/store-orders/show/${id}`);
+};
 
 let from = ref(usePage().props.from);
 let to = ref(usePage().props.to);
@@ -86,7 +91,7 @@ watch(
     }, 500)
 );
 
-const statusClass = (status) => {
+const statusBadgeColor = (status) => {
     switch (status) {
         case "RECEIVED":
             return "bg-green-500 text-white";
@@ -99,7 +104,10 @@ const statusClass = (status) => {
     }
 };
 const resetFilter = () => {
-    (from.value = null), (to.value = null), (branchId.value = null);
+    (from.value = null),
+        (to.value = null),
+        (branchId.value = null),
+        (search.value = null);
 };
 </script>
 
@@ -115,12 +123,23 @@ const resetFilter = () => {
         >
             <DivFlexCenter class="justify-between">
                 <!-- Search Bar-->
-                <Input
-                    v-model="search"
-                    type="text"
-                    placeholder="Order Number"
-                    class="w-96 rounded-lg border-gray-200"
-                />
+                <div class="relative w-full max-w-sm items-center">
+                    <Input
+                        v-model="search"
+                        id="search"
+                        type="text"
+                        placeholder="Order number search"
+                        class="pl-10"
+                    />
+                    <span
+                        class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
+                    >
+                        <MagnifyingGlassIcon
+                            class="size-6 text-muted-foreground"
+                        />
+                    </span>
+                </div>
+                <!-- Filters -->
                 <DivFlexCenter class="gap-5">
                     <Popover>
                         <PopoverTrigger> <Filter /> </PopoverTrigger>
@@ -173,6 +192,7 @@ const resetFilter = () => {
                         <TH>Order Items</TH>
                         <TH>Order Quantity</TH>
                         <TH>Receiving Status</TH>
+                        <TH>Actions</TH>
                     </tr>
                 </thead>
                 <tbody class="divide-y">
@@ -187,15 +207,32 @@ const resetFilter = () => {
                         <TD>{{ order.TOTALQUANTITY ?? 0 }}</TD>
                         <TD>
                             <Badge
-                                :class="statusClass(order.Status)"
+                                :class="statusBadgeColor(order.Status)"
                                 class="font-bold"
                                 >{{ order.Status }}</Badge
                             >
                         </TD>
+                        <TD>
+                            <Button
+                                @click="showOrderDetails(order.SONumber)"
+                                variant="link"
+                            >
+                                <Eye />
+                            </Button>
+                        </TD>
                     </tr>
                 </tbody>
             </Table>
-            <div class="flex items-center justify-end gap-2">
+            <div
+                v-if="orders.data.length === 0"
+                class="p-5 flex justify-center w-full"
+            >
+                No Result Found
+            </div>
+            <div
+                v-if="orders.data.length !== 0"
+                class="flex items-center justify-end gap-2"
+            >
                 <Component
                     v-for="link in orders.links"
                     :is="link.url ? 'Link' : 'span'"

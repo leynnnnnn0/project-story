@@ -8,6 +8,7 @@ use App\Models\Branch;
 use Inertia\Inertia;
 use App\Models\Order;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class StoreOrderController extends Controller
@@ -54,6 +55,16 @@ class StoreOrderController extends Controller
         return Inertia::render('StoreOrder/Create', [
             'products' => $products,
             'branches' => $branches
+        ]);
+    }
+
+    public function show($id)
+    {
+        $orders = DB::select("CALL SP_GET_RECEIVINGITEMS_HEADERID(?,?)", [$id, 1]);
+        $orderDetails = DB::select("CALL SP_GET_SO_TRANSACTIONHEADER(?)", [$id]);
+        return Inertia::render('StoreOrder/Show', [
+            'orders' => $orders,
+            'orderDetails' => $orderDetails
         ]);
     }
 

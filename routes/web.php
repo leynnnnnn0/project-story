@@ -38,6 +38,9 @@ Route::middleware('auth')
                 Route::get('/', 'index')
                     ->name('index');
 
+                Route::get('/show/{id}', 'show')
+                    ->name('show');
+
                 Route::post('/orders-list', 'validateHeaderUpload')
                     ->name('orders-list');
 
