@@ -25,6 +25,7 @@ import SearchBar from "./Components/table/SearchBar.vue";
 import TableHeader from "./Components/table/TableHeader.vue";
 import TableHead from "./Components/table/TableHead.vue";
 import TableBody from "./Components/table/TableBody.vue";
+import { Filter, Eye } from "lucide-vue-next";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -56,6 +57,8 @@ createInertiaApp({
             .component("TableHeader", TableHeader)
             .component("TableHead", TableHead)
             .component("TableBody", TableBody)
+            .component("Filter", Filter)
+            .component("Eye", Eye)
             .use(PrimeVue, {
                 theme: {
                     preset: Aura,

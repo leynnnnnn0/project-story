@@ -54,6 +54,7 @@ Route::middleware('auth')
 
         Route::controller(OrderApprovalController::class)->name('order-approval.')->group(function () {
             Route::get('/orders-approval', 'index')->name('index');
+            Route::get('/orders-approval/show/{id}', 'show')->name('show');
         });
 
         Route::controller(CategoryController::class)->name('category.')->group(function () {

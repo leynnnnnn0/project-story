@@ -14,6 +14,10 @@ const statusBadgeColor = (status) => {
             return "bg-yellow-500 text-white";
     }
 };
+import { router } from "@inertiajs/vue3";
+const showOrderDetails = (id) => {
+    router.get(`/orders-approval/show/${id}`);
+};
 </script>
 <template>
     <Layout heading="Orders For Approval List">
@@ -33,6 +37,7 @@ const statusBadgeColor = (status) => {
                     <TH> Vendor </TH>
                     <TH> Branch </TH>
                     <TH> Status </TH>
+                    <TH> Actions </TH>
                 </TableHead>
                 <TableBody>
                     <tr v-for="order in orders.data">
@@ -54,6 +59,14 @@ const statusBadgeColor = (status) => {
                                         : "Pending"
                                 }}</Badge
                             >
+                        </TD>
+                        <TD>
+                            <Button
+                                variant="link"
+                                @click="showOrderDetails(order.SONumber)"
+                            >
+                                <Eye />
+                            </Button>
                         </TD>
                     </tr>
                 </TableBody>

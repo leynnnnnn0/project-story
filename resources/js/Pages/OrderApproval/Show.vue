@@ -1,5 +1,15 @@
 <script setup>
-import { MagnifyingGlassIcon } from "@radix-icons/vue";
+const props = defineProps({
+    orders: {
+        type: Object,
+    },
+    orderDetails: {
+        type: Object,
+    },
+});
+import { Badge } from "@/components/ui/badge";
+
+import TableContainer from "@/Components/table/TableContainer.vue";
 import { ref } from "vue";
 const search = ref(null);
 const statusBadgeColor = (status) => {
@@ -14,17 +24,6 @@ const statusBadgeColor = (status) => {
             return "bg-yellow-500 text-white";
     }
 };
-import { Badge } from "@/components/ui/badge";
-
-const props = defineProps({
-    orders: {
-        type: Object,
-    },
-    orderDetails: {
-        type: Object,
-    },
-});
-
 const { SONumber, SODate, STATUS, SOApproved } = props.orderDetails[0];
 </script>
 
@@ -45,43 +44,25 @@ const { SONumber, SODate, STATUS, SOApproved } = props.orderDetails[0];
                     </Badge>
                 </span>
             </DivFlexCenter>
-            <DivFlexCenter class="justify-between">
-                <!-- Search Bar-->
-                <div class="relative w-full max-w-sm items-center">
-                    <Input
-                        v-model="search"
-                        id="search"
-                        type="text"
-                        placeholder="Item Search"
-                        class="pl-10"
-                    />
-                    <span
-                        class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
-                    >
-                        <MagnifyingGlassIcon
-                            class="size-6 text-muted-foreground"
-                        />
-                    </span>
-                </div>
-            </DivFlexCenter>
+            <TableHeader>
+                <SearchBar />
+            </TableHeader>
 
             <Table>
-                <thead>
-                    <tr>
-                        <TH>Item</TH>
-                        <TH>Code</TH>
-                        <TH>Unit</TH>
-                        <TH>Quantity</TH>
-                    </tr>
-                </thead>
-                <tbody class="divide-y">
+                <TableHead>
+                    <TH>Item</TH>
+                    <TH>Code</TH>
+                    <TH>Unit</TH>
+                    <TH>Quantity</TH>
+                </TableHead>
+                <TableBody>
                     <tr v-for="order in orders" :key="order.id">
                         <TD>{{ order.InventoryName }}</TD>
                         <TD>{{ order.ItemCode }}</TD>
                         <TD>{{ order.UOM_Desc }}</TD>
                         <TD>{{ order.PO_QTY }}</TD>
                     </tr>
-                </tbody>
+                </TableBody>
             </Table>
         </TableContainer>
     </Layout>
