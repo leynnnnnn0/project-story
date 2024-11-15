@@ -118,12 +118,10 @@ const resetFilter = () => {
         buttonName="Create New Order"
         :handleClick="handleClick"
     >
-        <DivFlexCol
-            class="p-5 w-full h-full rounded-lg border border-gray/20 space-y-5"
-        >
-            <DivFlexCenter class="justify-between">
+        <TableContainer>
+            <TableHeader>
                 <!-- Search Bar-->
-                <div class="relative w-full max-w-sm items-center">
+                <SearchBar>
                     <Input
                         v-model="search"
                         id="search"
@@ -131,14 +129,7 @@ const resetFilter = () => {
                         placeholder="Order number search"
                         class="pl-10"
                     />
-                    <span
-                        class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
-                    >
-                        <MagnifyingGlassIcon
-                            class="size-6 text-muted-foreground"
-                        />
-                    </span>
-                </div>
+                </SearchBar>
                 <!-- Filters -->
                 <DivFlexCenter class="gap-5">
                     <Popover>
@@ -178,24 +169,22 @@ const resetFilter = () => {
                         </PopoverContent>
                     </Popover>
                 </DivFlexCenter>
-            </DivFlexCenter>
+            </TableHeader>
 
             <Table>
-                <thead>
-                    <tr>
-                        <TH>Id</TH>
-                        <TH>Vendor</TH>
-                        <TH>Store</TH>
-                        <TH>Order Placed At</TH>
-                        <TH>Order #</TH>
-                        <TH>Order Date</TH>
-                        <TH>Order Items</TH>
-                        <TH>Order Quantity</TH>
-                        <TH>Receiving Status</TH>
-                        <TH>Actions</TH>
-                    </tr>
-                </thead>
-                <tbody class="divide-y">
+                <TableHead>
+                    <TH>Id</TH>
+                    <TH>Vendor</TH>
+                    <TH>Store</TH>
+                    <TH>Order Placed At</TH>
+                    <TH>Order #</TH>
+                    <TH>Order Date</TH>
+                    <TH>Order Items</TH>
+                    <TH>Order Quantity</TH>
+                    <TH>Receiving Status</TH>
+                    <TH>Actions</TH>
+                </TableHead>
+                <TableBody>
                     <tr v-for="order in orders.data" :key="order.id">
                         <TD>{{ order.Id }}</TD>
                         <TD>{{ order.vendor?.Name ?? "N/A" }}</TD>
@@ -221,7 +210,7 @@ const resetFilter = () => {
                             </Button>
                         </TD>
                     </tr>
-                </tbody>
+                </TableBody>
             </Table>
             <div
                 v-if="orders.data.length === 0"
@@ -246,7 +235,7 @@ const resetFilter = () => {
                     }"
                 />
             </div>
-        </DivFlexCol>
+        </TableContainer>
     </Layout>
 </template>
 
