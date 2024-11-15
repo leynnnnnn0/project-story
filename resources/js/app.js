@@ -19,6 +19,13 @@ import TH from "./Components/table/TH.vue";
 import TD from "./Components/table/TD.vue";
 import { Link } from "@inertiajs/vue3";
 import Popover from "primevue/popover";
+import TableContainer from "./Components/table/TableContainer.vue";
+import { MagnifyingGlassIcon } from "@radix-icons/vue";
+import SearchBar from "./Components/table/SearchBar.vue";
+import TableHeader from "./Components/table/TableHeader.vue";
+import TableHead from "./Components/table/TableHead.vue";
+import TableBody from "./Components/table/TableBody.vue";
+
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
 createInertiaApp({
@@ -43,6 +50,12 @@ createInertiaApp({
             .component("TD", TD)
             .component("Link", Link)
             .component("Popover", Popover)
+            .component("TableContainer", TableContainer)
+            .component("MagnifyingGlassIcon", MagnifyingGlassIcon)
+            .component("SearchBar", SearchBar)
+            .component("TableHeader", TableHeader)
+            .component("TableHead", TableHead)
+            .component("TableBody", TableBody)
             .use(PrimeVue, {
                 theme: {
                     preset: Aura,

@@ -21,7 +21,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { throttle } from "lodash";
-import { MagnifyingGlassIcon } from "@radix-icons/vue";
+
 const handleClick = () => {
     router.get("/store-orders/create");
 };

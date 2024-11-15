@@ -89,6 +89,9 @@ const logout = () => {
                         <DropdownMenuLabel> Receiving </DropdownMenuLabel>
                         <DropdownMenuLabel> Sales </DropdownMenuLabel>
                         <DropdownMenuLabel> Inventory </DropdownMenuLabel>
+                        <NavLink href="/items-list" :icon="Home">
+                            Items
+                        </NavLink>
                         <DropdownMenuLabel> Reports </DropdownMenuLabel>
                         <DropdownMenuLabel> Reference </DropdownMenuLabel>
                         <NavLink href="/category-list" :icon="Home">

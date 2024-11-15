@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ExcelTemplateController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\OrderApprovalController;
 use App\Http\Controllers\StoreOrderController;
 use App\Http\Controllers\ProfileController;
@@ -57,6 +58,10 @@ Route::middleware('auth')
 
         Route::controller(CategoryController::class)->name('category.')->group(function () {
             Route::get('/category-list', 'index')->name('index');
+        });
+
+        Route::controller(ItemController::class)->name('items.')->group(function () {
+            Route::get('/items-list', 'index')->name('index');
         });
 
 
