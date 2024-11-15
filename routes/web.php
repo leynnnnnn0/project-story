@@ -52,7 +52,7 @@ Route::middleware('auth')
                     ->name('imported-file');
             });
 
-        Route::controller(OrderApprovalController::class)->name('order-approval.')->group(function () {
+        Route::controller(OrderApprovalController::class)->name('orders-approval.')->group(function () {
             Route::get('/orders-approval', 'index')->name('index');
             Route::get('/orders-approval/show/{id}', 'show')->name('show');
         });

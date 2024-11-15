@@ -10,9 +10,15 @@ class ItemController extends Controller
 {
     public function index()
     {
-        $items = Product::paginate(10);
+        $search = request('search');
+        $query = Product::query();
+        if ($search)
+            $query->whereAny(['InventoryID', 'InventoryName'], 'like', "%$search%");
+        $items = $query->paginate(10);
+
         return Inertia::render('Item/Index', [
-            'items' => $items
+            'items' => $items,
+            'filters' => request()->only(['search'])
         ]);
     }
 }

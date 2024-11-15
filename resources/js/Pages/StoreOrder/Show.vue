@@ -41,7 +41,7 @@ const { SONumber, SODate, STATUS, SOApproved } = props.orderDetails[0];
                         Order Date: <span class="font-bold"> {{ SODate }}</span>
                     </span>
                     <span class="text-gray-700 text-sm">
-                        Status:
+                        Status: 
                         <Badge :class="statusBadgeColor(STATUS)">
                             {{ STATUS }}
                         </Badge>

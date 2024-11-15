@@ -5,13 +5,39 @@ const props = defineProps({
         required: true,
     },
 });
+
+import { router } from "@inertiajs/vue3";
+import { throttle } from "lodash";
+import { usePage } from "@inertiajs/vue3";
+let search = ref(usePage().props.search);
+import { ref, watch } from "vue";
+
+watch(
+    search,
+    throttle(function (value) {
+        router.get(
+            route("items.index"),
+            { search: value },
+            {
+                preserveState: true,
+                replace: true,
+            }
+        );
+    }, 500)
+);
 </script>
 
 <template>
     <Layout heading="Items List">
         <TableContainer>
             <TableHeader>
-                <SearchBar />
+                <SearchBar>
+                    <Input
+                        class="pl-10"
+                        v-model="search"
+                        placeholder="Search..."
+                    />
+                </SearchBar>
             </TableHeader>
 
             <Table>

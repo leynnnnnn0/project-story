@@ -1,10 +1,13 @@
 <script setup>
 import { Badge } from "@/components/ui/badge";
+import { usePage } from "@inertiajs/vue3";
 const props = defineProps({
     orders: {
         type: Object,
     },
 });
+
+
 
 const statusBadgeColor = (status) => {
     switch (status) {
@@ -15,6 +18,24 @@ const statusBadgeColor = (status) => {
     }
 };
 import { router } from "@inertiajs/vue3";
+import { throttle } from "lodash";
+let search = ref(usePage().props.search);
+import { ref, watch } from "vue";
+
+watch(
+    search,
+    throttle(function (value) {
+        router.get(
+            route("orders-approval.index"),
+            { search: value },
+            {
+                preserveState: true,
+                replace: true,
+            }
+        );
+    }, 500)
+);
+
 const showOrderDetails = (id) => {
     router.get(`/orders-approval/show/${id}`);
 };
@@ -23,7 +44,13 @@ const showOrderDetails = (id) => {
     <Layout heading="Orders For Approval List">
         <TableContainer>
             <TableHeader>
-                <SearchBar />
+                <SearchBar>
+                    <Input
+                        class="pl-10"
+                        v-model="search"
+                        placeholder="Order Number Search"
+                    />
+                </SearchBar>
             </TableHeader>
 
             <Table>

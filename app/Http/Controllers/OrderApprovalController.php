@@ -10,11 +10,15 @@ class OrderApprovalController extends Controller
 {
     public function index()
     {
-        $orders = Order::with(['branch', 'vendor'])
-            ->latest()
+        $search = request('search');
+        $query = Order::query()->with(['branch', 'vendor']);
+        if ($search)
+            $query->where('SONumber', 'like', "%$search%");
+        $orders = $query->latest()
             ->paginate(10);
         return Inertia::render('OrderApproval/Index', [
-            'orders' => $orders
+            'orders' => $orders,
+            'filters' => request()->only(['search'])
         ]);
     }
 
