@@ -10,7 +10,9 @@ class OrderApprovalController extends Controller
 {
     public function index()
     {
-        $orders = Order::with(['branch', 'vendor'])->paginate(10);
+        $orders = Order::with(['branch', 'vendor'])
+            ->latest()
+            ->paginate(10);
         return Inertia::render('OrderApproval/Index', [
             'orders' => $orders
         ]);

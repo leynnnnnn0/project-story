@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 
 import TableContainer from "@/Components/table/TableContainer.vue";
 import { ref } from "vue";
+import DivFlexCenter from "@/Components/div/DivFlexCenter.vue";
 const search = ref(null);
 const statusBadgeColor = (status) => {
     switch (status) {
@@ -30,19 +31,33 @@ const { SONumber, SODate, STATUS, SOApproved } = props.orderDetails[0];
 <template>
     <Layout heading="Order Details">
         <TableContainer>
-            <DivFlexCenter class="gap-5">
-                <span class="text-gray-700 text-sm">
-                    Order Number: <span class="font-bold"> {{ SONumber }}</span>
-                </span>
-                <span class="text-gray-700 text-sm">
-                    Order Date: <span class="font-bold"> {{ SODate }}</span>
-                </span>
-                <span class="text-gray-700 text-sm">
-                    Status:
-                    <Badge :class="statusBadgeColor(STATUS)">
-                        {{ STATUS }}
-                    </Badge>
-                </span>
+            <DivFlexCenter class="justify-between">
+                <DivFlexCenter class="gap-5">
+                    <span class="text-gray-700 text-sm">
+                        Order Number:
+                        <span class="font-bold"> {{ SONumber }}</span>
+                    </span>
+                    <span class="text-gray-700 text-sm">
+                        Order Date: <span class="font-bold"> {{ SODate }}</span>
+                    </span>
+                    <span class="text-gray-700 text-sm">
+                        Status:
+                        <Badge :class="statusBadgeColor(STATUS)">
+                            {{ STATUS }}
+                        </Badge>
+                    </span>
+                </DivFlexCenter>
+
+                <DivFlexCenter class="gap-5">
+                    <Button variant="secondary"> Update Details </Button>
+                    <Button class="bg-blue-500 hover:bg-blue-300">
+                        Copy Order And Create
+                    </Button>
+                    <Button variant="destructive"> Decline Order </Button>
+                    <Button class="bg-green-500 hover:bg-green-300">
+                        Approve Order
+                    </Button>
+                </DivFlexCenter>
             </DivFlexCenter>
             <TableHeader>
                 <SearchBar />
@@ -54,6 +69,7 @@ const { SONumber, SODate, STATUS, SOApproved } = props.orderDetails[0];
                     <TH>Code</TH>
                     <TH>Unit</TH>
                     <TH>Quantity</TH>
+                    <TH>Actions</TH>
                 </TableHead>
                 <TableBody>
                     <tr v-for="order in orders" :key="order.id">
@@ -61,6 +77,16 @@ const { SONumber, SODate, STATUS, SOApproved } = props.orderDetails[0];
                         <TD>{{ order.ItemCode }}</TD>
                         <TD>{{ order.UOM_Desc }}</TD>
                         <TD>{{ order.PO_QTY }}</TD>
+                        <TD>
+                            <DivFlexCenter class="gap-5">
+                                <button class="text-blue-500">
+                                    <Pencil />
+                                </button>
+                                <button class="text-red-500">
+                                    <Trash2 />
+                                </button>
+                            </DivFlexCenter>
+                        </TD>
                     </tr>
                 </TableBody>
             </Table>
