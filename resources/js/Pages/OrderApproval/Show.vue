@@ -59,6 +59,7 @@ const { SONumber, SODate, STATUS, SOApproved } = props.orderDetails[0];
                     </Button>
                 </DivFlexCenter>
             </DivFlexCenter>
+
             <TableHeader>
                 <SearchBar />
             </TableHeader>
@@ -77,7 +78,7 @@ const { SONumber, SODate, STATUS, SOApproved } = props.orderDetails[0];
                         <TD>{{ order.ItemCode }}</TD>
                         <TD>{{ order.UOM_Desc }}</TD>
                         <TD>{{ order.PO_QTY }}</TD>
-                        <TD>
+                        <TD class="w-[200px]">
                             <DivFlexCenter class="gap-5">
                                 <button class="text-blue-500">
                                     <Pencil />

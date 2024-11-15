@@ -31,38 +31,29 @@ const { SONumber, SODate, STATUS, SOApproved } = props.orderDetails[0];
 <template>
     <Layout heading="Order Details">
         <TableContainer>
-            <DivFlexCenter class="gap-5">
-                <span class="text-gray-700 text-sm">
-                    Order Number: <span class="font-bold"> {{ SONumber }}</span>
-                </span>
-                <span class="text-gray-700 text-sm">
-                    Order Date: <span class="font-bold"> {{ SODate }}</span>
-                </span>
-                <span class="text-gray-700 text-sm">
-                    Status:
-                    <Badge :class="statusBadgeColor(STATUS)">
-                        {{ STATUS }}
-                    </Badge>
-                </span>
+            <DivFlexCenter class="justify-between">
+                <DivFlexCenter class="gap-5">
+                    <span class="text-gray-700 text-sm">
+                        Order Number:
+                        <span class="font-bold"> {{ SONumber }}</span>
+                    </span>
+                    <span class="text-gray-700 text-sm">
+                        Order Date: <span class="font-bold"> {{ SODate }}</span>
+                    </span>
+                    <span class="text-gray-700 text-sm">
+                        Status:
+                        <Badge :class="statusBadgeColor(STATUS)">
+                            {{ STATUS }}
+                        </Badge>
+                    </span>
+                </DivFlexCenter>
+
+                <Button class="bg-blue-500 hover:bg-blue-300">
+                    Copy Order and Create
+                </Button>
             </DivFlexCenter>
             <DivFlexCenter class="justify-between">
-                <!-- Search Bar-->
-                <div class="relative w-full max-w-sm items-center">
-                    <Input
-                        v-model="search"
-                        id="search"
-                        type="text"
-                        placeholder="Item Search"
-                        class="pl-10"
-                    />
-                    <span
-                        class="absolute start-0 inset-y-0 flex items-center justify-center px-2"
-                    >
-                        <MagnifyingGlassIcon
-                            class="size-6 text-muted-foreground"
-                        />
-                    </span>
-                </div>
+                <SearchBar />
             </DivFlexCenter>
 
             <Table>
