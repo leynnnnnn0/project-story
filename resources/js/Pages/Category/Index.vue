@@ -2,6 +2,7 @@
 import { ref, watch } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import { useForm } from "@inertiajs/vue3";
+import { router } from "@inertiajs/vue3";
 let search = ref(usePage().props.search);
 
 const isEditModalVisible = ref(false);
@@ -39,6 +40,22 @@ const props = defineProps({
         required: true,
     },
 });
+
+import { throttle } from "lodash";
+
+watch(
+    search,
+    throttle(function (value) {
+        router.get(
+            route("categories.index"),
+            { search: value },
+            {
+                preserveState: true,
+                replace: true,
+            }
+        );
+    }, 500)
+);
 
 const editCategoryDetails = (id) => {
     targetId.value = id;

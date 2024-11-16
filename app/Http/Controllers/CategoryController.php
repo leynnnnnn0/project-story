@@ -12,9 +12,17 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Classification::where('Module', 'Category')->paginate(10);
+        $search = request('search');
+        $query = Classification::query()
+            ->where('Module', 'Category');
+
+        if ($search)
+            $query->where('SettingName', 'like', "%$search%");
+
+        $categories = $query->paginate(10);
         return Inertia::render('Category/Index', [
-            'categories' => $categories
+            'categories' => $categories,
+            'filters' => request()->only(['search'])
         ]);
     }
 
