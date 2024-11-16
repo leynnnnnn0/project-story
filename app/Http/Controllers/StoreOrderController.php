@@ -33,6 +33,7 @@ class StoreOrderController extends Controller
             ->latest()
             ->paginate(10);
 
+
         $branches = Branch::options();
 
         // $orderNumber = DB::select("CALL SP_GET_LAST_SO_BYBRANCH(?)", [31]);

@@ -64,6 +64,7 @@ const productDetails = reactive({
     item_name: null,
     unit: null,
     quantity: null,
+    cost: null,
 });
 
 const form = useForm({
@@ -75,6 +76,9 @@ const itemForm = useForm({
     quantity: null,
 });
 
+import { useConfirm } from "primevue/useconfirm";
+
+const confirm = useConfirm();
 // Nat - (This function will just check if the value item select changed to set the UOM accordingly)
 watch(productId, (newValue) => {
     if (newValue) {
@@ -87,6 +91,7 @@ watch(productId, (newValue) => {
                 productDetails.item_name = result.InventoryName;
                 productDetails.item_code = result.InventoryID;
                 productDetails.unit = result.Packaging;
+                productDetails.cost = result.Cost;
                 console.log(productDetails);
             })
             .catch((err) => console.log(err))
@@ -104,11 +109,9 @@ const addToOrdersButton = () => {
     itemForm.quantity = productDetails.quantity;
     if (!itemForm.item) {
         itemForm.setError("item", "Item field is required");
-        console.log(itemForm.quantity);
     }
     if (!itemForm.quantity) {
         itemForm.setError("quantity", "Quantity field is required");
-        console.log(itemForm.quantity);
     }
 
     if (
@@ -134,6 +137,8 @@ const addToOrdersButton = () => {
         orders.value.push({ ...productDetails });
     }
 
+    console.log(orders.value);
+
     Object.keys(productDetails).forEach((key) => {
         productDetails[key] = null;
     });
@@ -146,6 +151,34 @@ const addToOrdersButton = () => {
     });
     itemForm.item = null;
     itemForm.clearErrors();
+};
+
+const removeItem = (item_code) => {
+    confirm.require({
+        message: "Are you sure you want to remove this item from your orders?",
+        header: "Confirmation",
+        icon: "pi pi-exclamation-triangle",
+        rejectProps: {
+            label: "Cancel",
+            severity: "secondary",
+            outlined: true,
+        },
+        acceptProps: {
+            label: "Remove",
+            severity: "danger",
+        },
+        accept: () => {
+            orders.value = orders.value.filter(
+                (item) => item.item_code !== item_code
+            );
+            toast.add({
+                severity: "success",
+                summary: "Confirmed",
+                detail: "Item Removed",
+                life: 3000,
+            });
+        },
+    });
 };
 
 // Nat - (getting the imported data)
@@ -161,7 +194,9 @@ const proceedButton = () => {
             },
         })
         .then((response) => {
+            console.log(response);
             orders.value = [...orders.value, ...response.data.orders];
+            console.log(orders.value);
             visible.value = false;
             toast.add({
                 severity: "success",
@@ -169,6 +204,7 @@ const proceedButton = () => {
                 detail: "Items added successfully.",
                 life: 5000,
             });
+            form.orders_file = null;
         })
         .catch((error) => {
             form.setError("orders_file", error.response.data.message);
@@ -258,6 +294,14 @@ const proceedButton = () => {
                             />
                         </div>
                         <div class="flex flex-col space-y-1">
+                            <Label>Cost</Label>
+                            <Input
+                                type="text"
+                                disabled
+                                v-model="productDetails.cost"
+                            />
+                        </div>
+                        <div class="flex flex-col space-y-1">
                             <Label>Quantity</Label>
                             <Input
                                 type="number"
@@ -288,6 +332,7 @@ const proceedButton = () => {
                                 <TableHead> Code </TableHead>
                                 <TableHead> Unit </TableHead>
                                 <TableHead> Quantity </TableHead>
+                                <TableHead> Cost </TableHead>
                                 <TableHead> Action </TableHead>
                             </TableRow>
                         </TableHeader>
@@ -307,6 +352,18 @@ const proceedButton = () => {
                                 </TableCell>
                                 <TableCell>
                                     {{ order.quantity }}
+                                </TableCell>
+                                <TableCell>
+                                    {{ order.cost }}
+                                </TableCell>
+                                <TableCell>
+                                    <Button
+                                        @click="removeItem(order.item_code)"
+                                        variant="outline"
+                                        class="text-red-500"
+                                    >
+                                        <Trash2 />
+                                    </Button>
                                 </TableCell>
                             </TableRow>
                         </TableBody>

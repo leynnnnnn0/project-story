@@ -1,5 +1,6 @@
 import "../css/app.css";
 import "./bootstrap";
+import "primeicons/primeicons.css";
 
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
@@ -26,6 +27,7 @@ import TableHeader from "./Components/table/TableHeader.vue";
 import TableHead from "./Components/table/TableHead.vue";
 import TableBody from "./Components/table/TableBody.vue";
 import { Filter, Eye, Pencil, Trash2 } from "lucide-vue-next";
+import ConfirmationService from "primevue/confirmationservice";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -71,6 +73,7 @@ createInertiaApp({
                     },
                 },
             })
+            .use(ConfirmationService)
             .use(ToastService)
             .mount(el);
     },

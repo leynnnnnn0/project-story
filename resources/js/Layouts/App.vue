@@ -19,6 +19,7 @@ import {
 } from "lucide-vue-next";
 import Toast from "primevue/toast";
 import { router } from "@inertiajs/vue3";
+import ConfirmDialog from "primevue/confirmdialog";
 
 import NavLink from "../Components/NavLink.vue";
 
@@ -51,6 +52,7 @@ const logout = () => {
 
 <template>
     <Toast />
+    <ConfirmDialog></ConfirmDialog>
     <div
         class="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]"
     >

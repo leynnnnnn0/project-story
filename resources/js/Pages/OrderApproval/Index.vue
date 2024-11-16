@@ -7,8 +7,6 @@ const props = defineProps({
     },
 });
 
-
-
 const statusBadgeColor = (status) => {
     switch (status) {
         case 1:
@@ -83,7 +81,7 @@ const showOrderDetails = (id) => {
                                 >{{
                                     order.IsApproved == 1
                                         ? "Approved"
-                                        : "Pending"
+                                        : "For Approval"
                                 }}</Badge
                             >
                         </TD>

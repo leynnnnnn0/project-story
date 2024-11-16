@@ -26,7 +26,8 @@ class OrderListImport implements ToCollection
                     'item_name' => $row[3],
                     'package_configuration' => $row[4],
                     'unit' => $row[5],
-                    'quantity' => $row[6]
+                    'quantity' => $row[6],
+                    'cost' => 0
                 ];
             })
             ->values();
