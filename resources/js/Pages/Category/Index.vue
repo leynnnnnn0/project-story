@@ -1,7 +1,16 @@
 <script setup>
 import { ref, watch } from "vue";
 import { usePage } from "@inertiajs/vue3";
+import { useForm } from "@inertiajs/vue3";
 let search = ref(usePage().props.search);
+
+const isEditModalVisible = ref(false);
+
+const form = useForm({
+    name: null,
+    description: null,
+    value: null,
+});
 
 const props = defineProps({
     categories: {
@@ -9,6 +18,22 @@ const props = defineProps({
         required: true,
     },
 });
+
+const editCategoryDetails = (id) => {
+    isEditModalVisible.value = true;
+    const data = props.categories.data.find((item) => item.id === id);
+    form.name = data.SettingName;
+    form.description = data.Description;
+    form.value = data.Value;
+};
+
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 </script>
 
 <template>
@@ -30,6 +55,7 @@ const props = defineProps({
                     <TH> Setting Name</TH>
                     <TH> Description</TH>
                     <TH> Value </TH>
+                    <TH> Actions </TH>
                 </TableHead>
                 <TableBody>
                     <tr v-for="category in categories.data">
@@ -37,6 +63,15 @@ const props = defineProps({
                         <TD>{{ category.SettingName }}</TD>
                         <TD>{{ category.Value }}</TD>
                         <TD>{{ category.Description }}</TD>
+                        <TD>
+                            <Button
+                                @click="editCategoryDetails(category.id)"
+                                class="text-blue-500"
+                                variant="link"
+                            >
+                                <Pencil />
+                            </Button>
+                        </TD>
                     </tr>
                 </TableBody>
             </Table>
@@ -59,5 +94,33 @@ const props = defineProps({
                 />
             </div>
         </TableContainer>
+
+        <Dialog v-model:open="isEditModalVisible">
+            <DialogContent class="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Edit Category Details</DialogTitle>
+                    <DialogDescription>
+                        Input all important fields.
+                    </DialogDescription>
+                </DialogHeader>
+                <div class="space-y-5">
+                    <div class="flex flex-col space-y-1">
+                        <Label class="text-xs">Category Name</Label>
+                        <Input v-model="form.name" />
+                    </div>
+                    <div class="flex flex-col space-y-1">
+                        <Label class="text-xs">Description</Label>
+                        <Input v-model="form.description" />
+                    </div>
+                    <div class="flex flex-col space-y-1">
+                        <Label class="text-xs">Value</Label>
+                        <Input v-model="form.value" />
+                    </div>
+                    <div class="flex justify-end">
+                        <Button>Save Changes</Button>
+                    </div>
+                </div>
+            </DialogContent>
+        </Dialog>
     </Layout>
 </template>

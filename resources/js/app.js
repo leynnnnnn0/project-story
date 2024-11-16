@@ -28,6 +28,7 @@ import TableHead from "./Components/table/TableHead.vue";
 import TableBody from "./Components/table/TableBody.vue";
 import { Filter, Eye, Pencil, Trash2 } from "lucide-vue-next";
 import ConfirmationService from "primevue/confirmationservice";
+import { Label } from "@/components/ui/label";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
@@ -63,6 +64,7 @@ createInertiaApp({
             .component("Eye", Eye)
             .component("Pencil", Pencil)
             .component("Trash2", Trash2)
+            .component("Label", Label)
             .use(PrimeVue, {
                 theme: {
                     preset: Aura,
