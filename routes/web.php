@@ -57,8 +57,9 @@ Route::middleware('auth')
             Route::get('/orders-approval/show/{id}', 'show')->name('show');
         });
 
-        Route::controller(CategoryController::class)->name('category.')->group(function () {
+        Route::controller(CategoryController::class)->name('categories.')->group(function () {
             Route::get('/category-list', 'index')->name('index');
+            Route::post('/category-list/update/{classfication}', 'update')->name('update');
         });
 
         Route::controller(ItemController::class)->name('items.')->group(function () {
